@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Inspired by Dennis Snellenberg</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis for Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Vanilla Tilt for 3D Glassmorphism -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <!-- Spline 3D Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.51/build/spline-viewer.js"></script>
+</head>
+
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-logo">© Shivam Jha</div>
+        <div class="nav-links">
+            <a href="#about" class="magnetic" data-strength="20">About</a>
+            <a href="#expertise" class="magnetic" data-strength="20">Expertise</a>
+            <a href="#work" class="magnetic" data-strength="20">Projects</a>
+            <a href="#virtual-soul" class="magnetic" data-strength="20">Virtual Soul</a>
+            <a href="#contact" class="magnetic" data-strength="20">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <!-- Uploaded alternate background image -->
+            <div class="hero-bg-overlay" style="background-image: url('bg_dark.jpg');"></div>
+            <!-- Invisible trigger area over the background subject -->
+            <div class="hero-subject-hover"></div>
+            <div class="hero-container">
+                <!-- 3D Model -->
+                <div class="hero-3d-model">
+                    <spline-viewer url="https://prod.spline.design/v3nGu0F9BfM-k-vH/scene.splinecode"></spline-viewer>
+                </div>
+
+                <div class="hero-text fade-up">
+                    <h1 class="hero-title">Shivam Jha</h1>
+                </div>
+                <div class="hero-bottom">
+                    <p class="fade-up">AI Prompt Engineer & Digital Creator based in India. <br>I build
+                        scalable AI-driven systems & modern brand narratives.</p>
+                    <a href="#about" class="scroll-indicator fade-up">
+                        <div class="arrow">↓</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marquee Section -->
+        <section class="marquee-section">
+            <div class="marquee">
+                <div class="marquee-inner">
+                    <span>Generative AI Solutions Architect — </span>
+                    <span>Generative AI Solutions Architect — </span>
+                    <span>Generative AI Solutions Architect — </span>
+                    <span>Generative AI Solutions Architect — </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="about-container">
+                <p class="about-text p-reveal">
+                    AI Prompt Engineer and Generative AI Specialist with a strong technical foundation in computer
+                    applications and cloud systems. I blend technical expertise with visual storytelling, creating
+                    intelligent content ecosystems and digital products.
+                </p>
+                <div class="about-button magnetic" data-strength="50">
+                    <div class="circle-btn">
+                        <span>My resume</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise Section -->
+        <section class="expertise" id="expertise">
+            <div class="expertise-header">
+                <h2 class="fade-up">Core Competencies</h2>
+            </div>
+            <div class="expertise-grid fade-up">
+                <div class="expertise-item card">
+                    <p class="heading">AI & Automation</p>
+                    <p>Advanced Prompt Engineering, LLM Optimization, AI Agents, Workflow Automation, Chatbot Systems,
+                        AI API Integration.</p>
+                </div>
+                <div class="expertise-item card">
+                    <p class="heading">Development & Cloud</p>
+                    <p>HTML, CSS, Backend Logic Fundamentals, Responsive Web Design, Oracle Cloud Infrastructure
+                        (Certified), Scalable Architecture.</p>
+                </div>
+                <div class="expertise-item card">
+                    <p class="heading">Creative & Digital Modeling</p>
+                    <p>Freelance Model & Digital Brand Collaborator open to tech and lifestyle shoots. Blending fashion,
+                        tech, and AI artistry into powerful brand narratives.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Section -->
+        <section class="work" id="work">
+            <div class="work-header">
+                <h2 class="fade-up">Project Highlights</h2>
+            </div>
+            <div class="work-grid">
+                <!-- Asset Placeholders -->
+                <div class="work-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="work-info">
+                        <p class="heading">AI-Powered Stock Dashboard</p>
+                        <p>Architecture Concept & Development</p>
+                    </div>
+                    <div class="work-image-container">
+                        <div class="work-image placeholder-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop');">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="work-info">
+                        <p class="heading">Automated Content Engines</p>
+                        <p>AI Tool Integration</p>
+                    </div>
+                    <div class="work-image-container">
+                        <div class="work-image placeholder-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop');">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Virtual Soul Section -->
+        <section class="virtual-soul" id="virtual-soul">
+            <div class="virtual-soul-header">
+                <h2 class="fade-up">Meet My Virtual Soul</h2>
+                <p class="fade-up">AI-Generated Personas & Concepts for Brand Deals</p>
+            </div>
+            <div class="virtual-soul-grid fade-up">
+                <!-- Photo 1: Noir Elegance -->
+                <div class="vs-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="vs-image-container">
+                        <div class="vs-image" style="background-image: url('ai-shoot-1.png');"></div>
+                    </div>
+                    <div class="vs-info">
+                        <p class="heading">Noir Elegance</p>
+                        <p>Moody & Edgy Concept</p>
+                    </div>
+                </div>
+                <!-- Photo 2: Pastel Precision -->
+                <div class="vs-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="vs-image-container">
+                        <div class="vs-image" style="background-image: url('ai-shoot-2.png');"></div>
+                    </div>
+                    <div class="vs-info">
+                        <p class="heading">Blush & Bold</p>
+                        <p>Sophisticated Pastel Suiting</p>
+                    </div>
+                </div>
+                <!-- Photo 3: Midnight Metropolis -->
+                <div class="vs-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="vs-image-container">
+                        <div class="vs-image" style="background-image: url('ai-shoot-3.png');"></div>
+                    </div>
+                    <div class="vs-info">
+                        <p class="heading">Midnight Metropolis</p>
+                        <p>Luxury Skyline Toast</p>
+                    </div>
+                </div>
+                <!-- Photo 4: Crimson Comfort -->
+                <div class="vs-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="vs-image-container">
+                        <div class="vs-image" style="background-image: url('ai-shoot-4.png');"></div>
+                    </div>
+                    <div class="vs-info">
+                        <p class="heading">Crimson Comfort</p>
+                        <p>Warm & Approachable Casual</p>
+                    </div>
+                </div>
+                <!-- Photo 5: Digital Chill -->
+                <div class="vs-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="vs-image-container">
+                        <div class="vs-image" style="background-image: url('ai-shoot-5.png');"></div>
+                    </div>
+                    <div class="vs-info">
+                        <p class="heading">Digital Chill</p>
+                        <p>Monochrome Vibe</p>
+                    </div>
+                </div>
+                <!-- Photo 6: Urban Drive -->
+                <div class="vs-item glass-card" data-tilt data-tilt-max="10" data-tilt-speed="400"
+                    data-tilt-perspective="1000" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="vs-image-container">
+                        <div class="vs-image" style="background-image: url('ai-shoot-6.png');"></div>
+                    </div>
+                    <div class="vs-info">
+                        <p class="heading">Urban Drive</p>
+                        <p>Premium Automotive Lifestyle</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact" id="contact">
+            <div class="contact-container">
+                <div class="contact-content">
+                    <div class="contact-title">
+                        <div class="avatar-placeholder fade-up" style="background-image: url('bg.jpg');"></div>
+                        <h2 class="reveal-text"><span>Let's build</span></h2>
+                        <h2 class="reveal-text"><span>together</span></h2>
+                    </div>
+                    <div class="contact-line"></div>
+                    <div class="contact-footer">
+                        <div class="contact-btn magnetic" data-strength="60">
+                            <a href="mailto:heyshiv2002@gmail.com">heyshiv2002@gmail.com</a>
+                        </div>
+                        <div class="contact-socials fade-up">
+                            <a href="#">LinkedIn</a>
+                            <a href="#">Portfolio</a>
+                            <a href="tel:+918928537886">+91 89285 37886</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
