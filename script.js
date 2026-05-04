@@ -19,6 +19,14 @@ setTimeout(clearPreloader, 3500);
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
+// Normalize scroll for mobile touch devices to ensure smooth pinning
+if (ScrollTrigger.isTouch) {
+    ScrollTrigger.normalizeScroll({ 
+        allowNestedScroll: true,
+        momentum: true
+    });
+}
+
 // Initialize Smooth Scroll (Lenis)
 const lenis = new Lenis({
     lerp: 0.1,
@@ -359,32 +367,75 @@ const premiumCards = document.querySelectorAll('.premium-card');
 if (horizontalWrapper && horizontalTrack && premiumCards.length > 0) {
     let mm = gsap.matchMedia();
 
+    // Desktop: Pinned Horizontal Scroll
     mm.add("(min-width: 1025px)", () => {
-        function getScrollAmount() {
+        const getScrollAmount = () => {
             let trackWidth = horizontalTrack.scrollWidth;
             return -(trackWidth - window.innerWidth);
-        }
+        };
 
-        gsap.to(horizontalTrack, {
+        const scrollTween = gsap.to(horizontalTrack, {
             x: getScrollAmount,
             ease: "none",
             scrollTrigger: {
                 trigger: horizontalWrapper,
                 start: "top top",
-                end: () => `+=${getScrollAmount() * -1}`,
+                end: () => `+=${horizontalTrack.scrollWidth}`,
                 pin: true,
                 scrub: 1,
-                snap: {
-                    snapTo: 1 / (premiumCards.length - 1),
-                    duration: {min: 0.2, max: 0.8},
-                    ease: "power2.inOut"
-                },
-                invalidateOnRefresh: true
+                invalidateOnRefresh: true,
+                anticipatePin: 1,
             }
+        });
+
+        premiumCards.forEach((card) => {
+            gsap.fromTo(card, 
+                { scale: 0.8, opacity: 0.3, filter: "blur(4px)" },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    filter: "blur(0px)",
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        containerAnimation: scrollTween,
+                        start: "left 90%",
+                        end: "center center",
+                        scrub: true
+                    }
+                }
+            );
+        });
+
+        return () => {
+            // Cleanup
+            if (scrollTween.scrollTrigger) scrollTween.scrollTrigger.kill();
+        };
+    });
+
+    // Mobile & Tablet: Native Swipe with Reveal Animations
+    mm.add("(max-width: 1024px)", () => {
+        premiumCards.forEach((card) => {
+            gsap.fromTo(card,
+                { opacity: 0, scale: 0.9, y: 30 },
+                {
+                    opacity: 1, scale: 1, y: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
         });
     });
 
-    // Initialize Vanilla Tilt explicitly for the new elements
+    window.addEventListener('resize', () => {
+        ScrollTrigger.refresh();
+    });
+
     setTimeout(() => {
         if (typeof VanillaTilt !== 'undefined') {
             VanillaTilt.init(document.querySelectorAll(".tilt-wrapper"), {
