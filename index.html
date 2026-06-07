@@ -272,19 +272,18 @@
         </section>
 
         <!-- Work Section -->
-        <section class="work" id="work">
-            <div class="work-header">
-                <h2 class="fade-up">Project Highlights</h2>
-            </div>
-            <div class="work-spline-wrapper fade-up">
-                <div class="work-spline-fallback">
-                    <span class="work-spline-fallback-badge">Interactive 3D</span>
-                    <p>Loading interactive scene…</p>
+        <section class="works-showcase" id="work">
+            <div class="works-stage">
+                <div class="works-info">
+                    <div class="works-brand">
+                        <span class="works-brand-dot"></span>
+                        <span class="works-brand-name">Works</span>
+                    </div>
+                    <h2 class="works-title" id="worksTitle">Selected Projects</h2>
+                    <p class="works-desc" id="worksDesc">Hover a project to preview it — click to open the live demo.</p>
+                    <a class="works-cta is-disabled" id="worksCta" target="_blank" rel="noopener noreferrer">View live demo <span aria-hidden="true">→</span></a>
                 </div>
-                <spline-viewer
-                    class="work-spline"
-                    url="https://prod.spline.design/ocJGfXV8l1MEEfH8/scene.splinecode"
-                ></spline-viewer>
+                <div class="works-deck" id="worksDeck" aria-label="Projects"></div>
             </div>
         </section>
 

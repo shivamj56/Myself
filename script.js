@@ -359,14 +359,77 @@ gsap.to('.parallax-fast', {
     scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
 });
 
-// --- Work Section: interactive Spline 3D scene (replaces the old carousel) ---
-const workSpline = document.querySelector('.work-spline');
-if (workSpline) {
-    const hideSplineFallback = () => {
-        const fb = document.querySelector('.work-spline-fallback');
-        if (fb) fb.style.opacity = '0';
+// --- Work Section: interactive "Works" showcase (custom-built, replaces the old carousel/Spline) ---
+// ▸ EDIT YOUR PROJECTS HERE: set title, description, and the live-demo URL for each card.
+//   url   -> opens in a new tab when the card is clicked. Leave "" for no link (shows as disabled).
+//   image -> optional screenshot URL; if omitted, a styled gradient panel is shown instead.
+const PROJECTS = [
+    { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "", gradient: "linear-gradient(135deg, #ff2d55, #8a0b1f)" },
+    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
+    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
+    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
+    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" }
+];
+
+(() => {
+    const deck = document.getElementById('worksDeck');
+    const titleEl = document.getElementById('worksTitle');
+    const descEl = document.getElementById('worksDesc');
+    const ctaEl = document.getElementById('worksCta');
+    if (!deck || !titleEl || !descEl || !ctaEl) return;
+
+    const GRADIENTS = [
+        'linear-gradient(135deg, #455ce9, #23299e)',
+        'linear-gradient(135deg, #00f0ff, #0077ff)',
+        'linear-gradient(135deg, #a855f7, #6d28d9)',
+        'linear-gradient(135deg, #f97316, #b91c1c)',
+        'linear-gradient(135deg, #10b981, #047857)'
+    ];
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    const setActive = (p) => {
+        titleEl.textContent = p.title;
+        descEl.textContent = p.description;
+        if (p.url) { ctaEl.href = p.url; ctaEl.classList.remove('is-disabled'); }
+        else { ctaEl.removeAttribute('href'); ctaEl.classList.add('is-disabled'); }
+        [titleEl, descEl].forEach((el) => {
+            if (el.animate) el.animate(
+                [{ opacity: 0.25, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }],
+                { duration: 320, easing: 'cubic-bezier(0.22,1,0.36,1)' }
+            );
+        });
     };
-    workSpline.addEventListener('load', hideSplineFallback);
-    setTimeout(hideSplineFallback, 6000);
-}
+
+    deck.innerHTML = PROJECTS.map((p, i) => {
+        const isLive = !!p.url;
+        const grad = isLive ? (p.gradient || GRADIENTS[i % GRADIENTS.length]) : 'linear-gradient(135deg, #23232d, #14141a)';
+        const tag = isLive ? 'a' : 'div';
+        const attrs = isLive
+            ? 'href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer"'
+            : 'role="button" tabindex="0" aria-disabled="true"';
+        const inner = isLive
+            ? (p.image
+                ? '<img class="work-card-img" src="' + esc(p.image) + '" alt="' + esc(p.title) + ' preview" loading="lazy">'
+                : '<span class="work-card-shot-title">' + esc(p.title) + '</span>')
+            : '<span class="work-card-soon-badge">Coming soon</span>';
+        const tail = isLive ? '<span class="work-card-go">↗</span>' : '<span class="work-card-soon">soon</span>';
+        return '<' + tag + ' class="work-card' + (isLive ? '' : ' is-soon') + '" data-index="' + i + '" ' + attrs + '>'
+            + '<span class="work-card-screen" style="background:' + grad + ';">'
+            + '<span class="work-card-chrome"><i></i><i></i><i></i></span>'
+            + '<span class="work-card-shot">' + inner + '</span>'
+            + '</span>'
+            + '<span class="work-card-label">' + esc(p.title) + tail + '</span>'
+            + '</' + tag + '>';
+    }).join('');
+
+    const cards = deck.querySelectorAll('.work-card');
+    cards.forEach((card) => {
+        const p = PROJECTS[Number(card.dataset.index)];
+        const activate = () => { cards.forEach((c) => c.classList.remove('is-active')); card.classList.add('is-active'); setActive(p); };
+        card.addEventListener('mouseenter', activate);
+        card.addEventListener('focus', activate);
+    });
+
+    if (PROJECTS.length) setActive(PROJECTS[0]);
+})();
 
