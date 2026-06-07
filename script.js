@@ -359,12 +359,13 @@ gsap.to('.parallax-fast', {
     scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
 });
 
-// --- Work Section: interactive "Works" showcase (custom-built, replaces the old carousel/Spline) ---
-// ▸ EDIT YOUR PROJECTS HERE: set title, description, and the live-demo URL for each card.
-//   url   -> opens in a new tab when the card is clicked. Leave "" for no link (shows as disabled).
-//   image -> optional screenshot URL; if omitted, a styled gradient panel is shown instead.
+// --- Work Section: each panel independently looks at the mouse (per-card), over a video bg ---
+// ▸ EDIT YOUR PROJECTS HERE: title, description, live-demo url (opens new tab), optional image.
+//   url "" => "Coming soon" (non-clickable). image => full-bleed screenshot panel.
+//   Per-card depth is in style.css (.work-card:nth-child(n) translateZ) and DEPTH[] below.
 const PROJECTS = [
-    { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "", gradient: "linear-gradient(135deg, #ff2d55, #8a0b1f)" },
+    { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "assets/nexera.jpg" },
+    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
     { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
     { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
     { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
@@ -372,11 +373,12 @@ const PROJECTS = [
 ];
 
 (() => {
+    const section = document.querySelector('.works-showcase');
     const deck = document.getElementById('worksDeck');
     const titleEl = document.getElementById('worksTitle');
     const descEl = document.getElementById('worksDesc');
     const ctaEl = document.getElementById('worksCta');
-    if (!deck || !titleEl || !descEl || !ctaEl) return;
+    if (!section || !deck || !titleEl || !descEl || !ctaEl) return;
 
     const GRADIENTS = [
         'linear-gradient(135deg, #455ce9, #23299e)',
@@ -400,36 +402,85 @@ const PROJECTS = [
         });
     };
 
-    deck.innerHTML = PROJECTS.map((p, i) => {
+    const cardHtml = PROJECTS.map((p, i) => {
         const isLive = !!p.url;
-        const grad = isLive ? (p.gradient || GRADIENTS[i % GRADIENTS.length]) : 'linear-gradient(135deg, #23232d, #14141a)';
         const tag = isLive ? 'a' : 'div';
         const attrs = isLive
             ? 'href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer"'
             : 'role="button" tabindex="0" aria-disabled="true"';
-        const inner = isLive
-            ? (p.image
-                ? '<img class="work-card-img" src="' + esc(p.image) + '" alt="' + esc(p.title) + ' preview" loading="lazy">'
-                : '<span class="work-card-shot-title">' + esc(p.title) + '</span>')
-            : '<span class="work-card-soon-badge">Coming soon</span>';
-        const tail = isLive ? '<span class="work-card-go">↗</span>' : '<span class="work-card-soon">soon</span>';
+        let inner;
+        if (isLive && p.image) {
+            inner = '<img class="work-card-img" src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy">';
+        } else if (isLive) {
+            inner = '<span class="work-card-fallback" style="background:' + (p.gradient || GRADIENTS[i % GRADIENTS.length]) + ';">' + esc(p.title) + '</span>';
+        } else {
+            inner = '<span class="work-card-soon-badge">Coming soon</span>';
+        }
         return '<' + tag + ' class="work-card' + (isLive ? '' : ' is-soon') + '" data-index="' + i + '" ' + attrs + '>'
-            + '<span class="work-card-screen" style="background:' + grad + ';">'
-            + '<span class="work-card-chrome"><i></i><i></i><i></i></span>'
-            + '<span class="work-card-shot">' + inner + '</span>'
-            + '</span>'
-            + '<span class="work-card-label">' + esc(p.title) + tail + '</span>'
+            + '<span class="work-card-screen">' + inner + '</span>'
             + '</' + tag + '>';
     }).join('');
+    deck.innerHTML = '<div class="works-orbit">' + cardHtml + '</div>';
 
-    const cards = deck.querySelectorAll('.work-card');
+    const cards = Array.from(deck.querySelectorAll('.work-card'));
     cards.forEach((card) => {
         const p = PROJECTS[Number(card.dataset.index)];
         const activate = () => { cards.forEach((c) => c.classList.remove('is-active')); card.classList.add('is-active'); setActive(p); };
         card.addEventListener('mouseenter', activate);
         card.addEventListener('focus', activate);
     });
-
     if (PROJECTS.length) setActive(PROJECTS[0]);
+
+    // Per-card look-at-mouse: each panel rotates toward the cursor based on ITS OWN centre,
+    // so every card turns a different amount/direction. Floats at its own translateZ depth.
+    const DEPTH = [52, -18, 30, -34, 40, -48];
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!isTouch && !reduceMotion) {
+        const MAX_RY = 26, MAX_RX = 18;
+        const clamp = (v) => Math.max(-1.2, Math.min(1.2, v));
+        const st = cards.map(() => ({ rx: 0, ry: 0, tRx: 0, tRy: 0 }));
+        let centers = [];
+        const measure = () => {
+            const sr = section.getBoundingClientRect();
+            centers = cards.map((card) => {
+                const r = card.getBoundingClientRect();
+                return { x: r.left + r.width / 2 - sr.left, y: r.top + r.height / 2 - sr.top, w: sr.width, h: sr.height };
+            });
+        };
+        const applyRest = () => { cards.forEach((card, i) => { card.style.transform = 'translateZ(' + DEPTH[i % DEPTH.length] + 'px)'; }); };
+        measure();
+        applyRest();
+        window.addEventListener('resize', measure);
+        let raf = null;
+        const tick = () => {
+            let moving = false;
+            cards.forEach((card, i) => {
+                const s = st[i];
+                s.ry += (s.tRy - s.ry) * 0.12;
+                s.rx += (s.tRx - s.rx) * 0.12;
+                if (Math.abs(s.tRy - s.ry) > 0.01 || Math.abs(s.tRx - s.rx) > 0.01) moving = true;
+                card.style.transform = 'translateZ(' + DEPTH[i % DEPTH.length] + 'px) rotateY(' + s.ry.toFixed(2) + 'deg) rotateX(' + s.rx.toFixed(2) + 'deg)';
+            });
+            raf = moving ? requestAnimationFrame(tick) : null;
+        };
+        const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+        section.addEventListener('mousemove', (e) => {
+            const sr = section.getBoundingClientRect();
+            const mx = e.clientX - sr.left, my = e.clientY - sr.top;
+            cards.forEach((card, i) => {
+                const c = centers[i] || { x: sr.width / 2, y: sr.height / 2, w: sr.width, h: sr.height };
+                const dx = clamp((mx - c.x) / (c.w / 2));
+                const dy = clamp((my - c.y) / (c.h / 2));
+                st[i].tRy = dx * MAX_RY;
+                st[i].tRx = -dy * MAX_RX;
+            });
+            kick();
+        });
+        section.addEventListener('mouseleave', () => {
+            st.forEach((s) => { s.tRy = 0; s.tRx = 0; });
+            kick();
+        });
+    }
 })();
 
