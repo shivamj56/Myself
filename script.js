@@ -359,91 +359,14 @@ gsap.to('.parallax-fast', {
     scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
 });
 
-// --- Horizontal Pinned Scroll Logic ---
-const horizontalWrapper = document.querySelector('.premium-carousel-wrapper');
-const horizontalTrack = document.querySelector('.premium-track');
-const premiumCards = document.querySelectorAll('.premium-card');
-
-if (horizontalWrapper && horizontalTrack && premiumCards.length > 0) {
-    let mm = gsap.matchMedia();
-
-    // Desktop: Pinned Horizontal Scroll
-    mm.add("(min-width: 1025px)", () => {
-        const getScrollAmount = () => {
-            let trackWidth = horizontalTrack.scrollWidth;
-            return -(trackWidth - window.innerWidth);
-        };
-
-        const scrollTween = gsap.to(horizontalTrack, {
-            x: getScrollAmount,
-            ease: "none",
-            scrollTrigger: {
-                trigger: horizontalWrapper,
-                start: "top top",
-                end: () => `+=${horizontalTrack.scrollWidth}`,
-                pin: true,
-                scrub: 1,
-                invalidateOnRefresh: true,
-                anticipatePin: 1,
-            }
-        });
-
-        premiumCards.forEach((card) => {
-            gsap.fromTo(card, 
-                { scale: 0.8, opacity: 0.3, filter: "blur(4px)" },
-                {
-                    scale: 1,
-                    opacity: 1,
-                    filter: "blur(0px)",
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: card,
-                        containerAnimation: scrollTween,
-                        start: "left 90%",
-                        end: "center center",
-                        scrub: true
-                    }
-                }
-            );
-        });
-
-        return () => {
-            // Cleanup
-            if (scrollTween.scrollTrigger) scrollTween.scrollTrigger.kill();
-        };
-    });
-
-    // Mobile & Tablet: Native Swipe with Reveal Animations
-    mm.add("(max-width: 1024px)", () => {
-        premiumCards.forEach((card) => {
-            gsap.fromTo(card,
-                { opacity: 0, scale: 0.9, y: 30 },
-                {
-                    opacity: 1, scale: 1, y: 0,
-                    duration: 1,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 90%",
-                        toggleActions: "play none none reverse"
-                    }
-                }
-            );
-        });
-    });
-
-    window.addEventListener('resize', () => {
-        ScrollTrigger.refresh();
-    });
-
-    setTimeout(() => {
-        if (typeof VanillaTilt !== 'undefined') {
-            VanillaTilt.init(document.querySelectorAll(".tilt-wrapper"), {
-                max: 10,
-                speed: 400,
-                perspective: 1000
-            });
-        }
-    }, 500);
+// --- Work Section: interactive Spline 3D scene (replaces the old carousel) ---
+const workSpline = document.querySelector('.work-spline');
+if (workSpline) {
+    const hideSplineFallback = () => {
+        const fb = document.querySelector('.work-spline-fallback');
+        if (fb) fb.style.opacity = '0';
+    };
+    workSpline.addEventListener('load', hideSplineFallback);
+    setTimeout(hideSplineFallback, 6000);
 }
 

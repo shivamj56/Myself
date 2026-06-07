@@ -1292,6 +1292,79 @@
      font-size: 3rem;
  }
 
+ /* Work Section — Spline 3D Showcase */
+ .work-spline-wrapper {
+     position: relative;
+     width: 100%;
+     height: 70vh;
+     min-height: 480px;
+     max-height: 760px;
+     margin-top: 2rem;
+     border-radius: 28px;
+     overflow: hidden;
+     background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     -webkit-backdrop-filter: blur(24px);
+     backdrop-filter: blur(24px);
+ }
+
+ .work-spline {
+     position: relative;
+     z-index: 1;
+     display: block;
+     width: 100%;
+     height: 100%;
+ }
+
+ .work-spline-fallback {
+     position: absolute;
+     inset: 0;
+     z-index: 0;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 1rem;
+     padding: 2rem;
+     text-align: center;
+     color: rgba(255, 255, 255, 0.55);
+     pointer-events: none;
+     transition: opacity 0.6s ease;
+ }
+
+ .work-spline-fallback-badge {
+     font-size: 0.75rem;
+     letter-spacing: 0.2em;
+     text-transform: uppercase;
+     padding: 0.4rem 0.9rem;
+     border-radius: 999px;
+     border: 1px solid rgba(255, 255, 255, 0.15);
+     color: rgba(255, 255, 255, 0.7);
+ }
+
+ .work-spline-fallback p {
+     max-width: 32ch;
+     font-size: 0.95rem;
+     line-height: 1.5;
+ }
+
+ @media (max-width: 1024px) {
+     .work-spline-wrapper {
+         height: 60vh;
+         min-height: 420px;
+         border-radius: 22px;
+     }
+ }
+
+ @media (max-width: 600px) {
+     .work-spline-wrapper {
+         height: 56vh;
+         min-height: 360px;
+         border-radius: 18px;
+         margin-top: 1.25rem;
+     }
+ }
+
  /* Horizontal Pinned GSAP Scroll Block */
  .premium-carousel {
      display: contents;
