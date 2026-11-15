@@ -1,0 +1,20 @@
+# Shivam Anil Jha
+
+> Shivam Anil Jha (also written Shivam Jha) is an AI architect and full-stack developer from Pune (Pimpri-Chinchwad),
+> Maharashtra, India, and the maker of Orbit OS, an open-source (GPL-3.0) smart TV remote and setup app for Google TV
+> and Android TV.
+
+## Profiles
+- Portfolio: https://shivamj56.github.io/Myself/
+- GitHub: https://github.com/shivamj56
+- LinkedIn: https://www.linkedin.com/in/shivam-jha-509482268/
+- X: https://x.com/heyshivm11
+
+## Work
+- Orbit OS (code): https://github.com/shivamj56/orbit-os
+- Orbit OS (website): https://orbit-os-tv.vercel.app/
+- Orbit OS on Google Play: https://play.google.com/store/apps/details?id=dev.shiv.orbit
+
+## Skills
+AI architecture, prompt engineering, generative AI, full-stack development, Flutter and Dart, React, Android TV and
+Google TV development, open source.
