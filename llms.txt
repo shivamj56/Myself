@@ -9,6 +9,8 @@
 - GitHub: https://github.com/shivamj56
 - LinkedIn: https://www.linkedin.com/in/shivamaniljha/
 - X: https://x.com/heyshivm11
+- Product Hunt: https://www.producthunt.com/@heyshivm
+- XDA Forums: https://xdaforums.com/m/heyshivm.13499087/
 
 ## Work
 - Orbit OS (code): https://github.com/shivamj56/orbit-os
