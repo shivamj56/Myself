@@ -24,4 +24,17 @@
       <image:loc>https://shivamjha.dev/assets/orbit-os.jpg</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://shivamjha.dev/photos.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <image:image>
+      <image:loc>https://shivamjha.dev/assets/photos/shivam-anil-jha-portrait.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://shivamjha.dev/assets/photos/shivam-anil-jha-portrait-purple.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://shivamjha.dev/assets/photos/shivam-anil-jha-illustrated-portrait.jpg</image:loc>
+    </image:image>
+  </url>
 </urlset>
