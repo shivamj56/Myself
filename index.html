@@ -9,21 +9,43 @@
     <meta name="author" content="Shivam Anil Jha">
     <meta property="og:title" content="Shivam Anil Jha (Shivam Jha) | AI Architect & Full-Stack Developer">
     <meta property="og:description" content="Shivam Anil Jha (Shivam Jha) is an AI architect and full-stack developer from Mumbai, India, who builds AI products and apps: NexeraAI, Clonix, Orbit OS and more.">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="profile">
     <meta name="robots" content="index, follow">
     <title>Shivam Anil Jha (Shivam Jha) | AI Architect & Full-Stack Developer</title>
     <link rel="canonical" href="https://shivamj56.github.io/Myself/">
     <meta property="og:url" content="https://shivamj56.github.io/Myself/">
     <meta property="og:site_name" content="Shivam Anil Jha">
-    <meta property="og:image" content="https://avatars.githubusercontent.com/u/95514609?v=4">
-    <meta property="og:image:alt" content="Shivam Anil Jha">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://shivamj56.github.io/Myself/assets/og-card.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Shivam Anil Jha, AI architect and full-stack developer from Mumbai, India">
+    <meta property="profile:first_name" content="Shivam">
+    <meta property="profile:last_name" content="Jha">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://shivamj56.github.io/Myself/assets/og-card.jpg">
     <meta name="twitter:site" content="@heyshivm11">
     <meta name="twitter:creator" content="@heyshivm11">
+    <!-- The same person on other sites (rel="me" ties the profiles together) -->
+    <link rel="me" href="https://github.com/shivamj56">
+    <link rel="me" href="https://www.linkedin.com/in/shivamaniljha/">
+    <link rel="me" href="https://x.com/heyshivm11">
+    <link rel="me" href="https://www.producthunt.com/@heyshivm">
+    <link rel="me" href="https://sqaron.dev/shivam-jha/">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://shivamj56.github.io/Myself/#website",
+      "url": "https://shivamj56.github.io/Myself/",
+      "name": "Shivam Anil Jha",
+      "alternateName": ["Shivam Jha", "Shivam Anil Jha portfolio"],
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://shivamj56.github.io/Myself/#me"
+      }
+    },
     {
       "@type": "ProfilePage",
       "@id": "https://shivamj56.github.io/Myself/#page",
@@ -31,9 +53,29 @@
       "name": "Shivam Anil Jha: AI architect and full-stack developer from Mumbai",
       "inLanguage": "en",
       "dateModified": "2026-11-16",
+      "isPartOf": {
+        "@id": "https://shivamj56.github.io/Myself/#website"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://shivamj56.github.io/Myself/#photo"
+      },
       "mainEntity": {
         "@id": "https://shivamj56.github.io/Myself/#me"
       }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://shivamj56.github.io/Myself/#photo",
+      "url": "https://shivamj56.github.io/Myself/assets/shivam-anil-jha.jpg",
+      "contentUrl": "https://shivamj56.github.io/Myself/assets/shivam-anil-jha.jpg",
+      "width": 571,
+      "height": 571,
+      "caption": "Shivam Anil Jha",
+      "creator": {
+        "@id": "https://shivamj56.github.io/Myself/#me"
+      },
+      "creditText": "Shivam Anil Jha",
+      "copyrightNotice": "© Shivam Anil Jha"
     },
     {
       "@type": "Person",
@@ -46,14 +88,24 @@
         "heyshivm11"
       ],
       "url": "https://shivamj56.github.io/Myself/",
-      "image": "https://avatars.githubusercontent.com/u/95514609?v=4",
+      "image": {
+        "@id": "https://shivamj56.github.io/Myself/#photo"
+      },
       "jobTitle": "AI Architect & Full-Stack Developer",
       "description": "Shivam Anil Jha (Shivam Jha) is an AI architect and full-stack developer from Mumbai, India, who builds AI products and apps: NexeraAI, Clonix, Orbit OS and more.",
+      "disambiguatingDescription": "Indian AI architect and full-stack developer from Mumbai; co-founder of Sqaron Technologies; builder of NexeraAI, Clonix and Orbit OS (GitHub: shivamj56).",
       "nationality": "Indian",
       "homeLocation": {
         "@type": "Place",
         "name": "Mumbai, Maharashtra, India"
       },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Mumbai",
+        "addressRegion": "Maharashtra",
+        "addressCountry": "IN"
+      },
+      "knowsLanguage": ["en", "hi"],
       "knowsAbout": [
         "Artificial intelligence",
         "Prompt engineering",
@@ -268,19 +320,34 @@
                     <br><br>
                     <span class="parallax-fast" style="display: inline-block; color: var(--primary-color);">I blend technical expertise with visual storytelling, creating intelligent content ecosystems and digital products.</span>
                 </p>
-                <p class="about-text about-facts" style="font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.7; margin-top: 2rem; opacity: 0.9;">
-                    I’m Shivam Anil Jha, an AI architect and full-stack developer from Mumbai, India. I build my own products:
-                    <a href="https://nexera-ai-xi.vercel.app/" style="color: inherit; text-decoration: underline;">NexeraAI</a>, an AI career platform;
-                    <a href="https://clonix-tau.vercel.app/" style="color: inherit; text-decoration: underline;">Clonix</a>, which turns any website into design tokens and components for AI code editors;
-                    and <a href="https://github.com/shivamj56/orbit-os" style="color: inherit; text-decoration: underline;">Orbit OS</a>,
-                    an open-source (GPL-3.0) smart TV app for Google TV and Android TV, free on
-                    <a href="https://play.google.com/store/apps/details?id=dev.shiv.orbit" style="color: inherit; text-decoration: underline;">Google Play</a>.
-                    I also design websites for businesses, like three <a href="#work" style="color: inherit; text-decoration: underline;">website concepts</a> for a corporate cab company.
-                    You can find me on <a href="https://www.linkedin.com/in/shivamaniljha/" style="color: inherit; text-decoration: underline;">LinkedIn</a>,
-                    <a href="https://x.com/heyshivm11" style="color: inherit; text-decoration: underline;">X (@heyshivm11)</a>,
-                    <a href="https://github.com/shivamj56" style="color: inherit; text-decoration: underline;">GitHub</a> and
-                    <a href="https://www.producthunt.com/@heyshivm" style="color: inherit; text-decoration: underline;">Product Hunt</a>.
-                </p>
+                <div class="about-profile">
+                    <figure class="about-portrait">
+                        <img src="assets/shivam-anil-jha.jpg" width="571" height="571" alt="Shivam Anil Jha, AI architect and full-stack developer from Mumbai, India" loading="lazy" decoding="async">
+                        <figcaption><strong>Shivam Anil Jha</strong><span>AI architect · Mumbai, India</span></figcaption>
+                    </figure>
+                    <div class="about-profile-text">
+                    <p class="about-text about-facts" style="font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.7; margin-top: 2rem; opacity: 0.9;">
+                        I’m Shivam Anil Jha, an AI architect and full-stack developer from Mumbai, India. I build my own products:
+                        <a href="https://nexera-ai-xi.vercel.app/" style="color: inherit; text-decoration: underline;">NexeraAI</a>, an AI career platform;
+                        <a href="https://clonix-tau.vercel.app/" style="color: inherit; text-decoration: underline;">Clonix</a>, which turns any website into design tokens and components for AI code editors;
+                        and <a href="https://github.com/shivamj56/orbit-os" style="color: inherit; text-decoration: underline;">Orbit OS</a>,
+                        an open-source (GPL-3.0) smart TV app for Google TV and Android TV, free on
+                        <a href="https://play.google.com/store/apps/details?id=dev.shiv.orbit" style="color: inherit; text-decoration: underline;">Google Play</a>.
+                        I also design websites for businesses, like three <a href="#work" style="color: inherit; text-decoration: underline;">website concepts</a> for a corporate cab company.
+                        You can find me on <a href="https://www.linkedin.com/in/shivamaniljha/" style="color: inherit; text-decoration: underline;">LinkedIn</a>,
+                        <a href="https://x.com/heyshivm11" style="color: inherit; text-decoration: underline;">X (@heyshivm11)</a>,
+                        <a href="https://github.com/shivamj56" style="color: inherit; text-decoration: underline;">GitHub</a> and
+                        <a href="https://www.producthunt.com/@heyshivm" style="color: inherit; text-decoration: underline;">Product Hunt</a>.
+                    </p>
+                        <dl class="about-glance">
+                            <div><dt>Based in</dt><dd>Mumbai, India</dd></div>
+                            <div><dt>Works on</dt><dd>AI architecture, full-stack and app development</dd></div>
+                            <div><dt>Co-founder of</dt><dd><a href="https://sqaron.dev/">Sqaron Technologies</a></dd></div>
+                            <div><dt>Builds</dt><dd>NexeraAI · Clonix · Orbit OS</dd></div>
+                            <div><dt>More</dt><dd><a href="about.html">Who is Shivam Anil Jha? The short bio</a></dd></div>
+                        </dl>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -423,6 +490,14 @@
                     <a class="works-cta is-disabled" id="worksCta" target="_blank" rel="noopener noreferrer">View live demo <span aria-hidden="true">→</span></a>
                 </div>
                 <div class="works-deck" id="worksDeck" aria-label="Projects"></div>
+                <noscript>
+                    <ul class="works-noscript">
+                        <li><a href="https://nexera-ai-xi.vercel.app/">NexeraAI</a>: an AI career platform.</li>
+                        <li><a href="https://clonix-tau.vercel.app/">Clonix</a>: website design intelligence for AI code editors.</li>
+                        <li><a href="https://orbit-os-tv.vercel.app/">Orbit OS</a>: an open-source smart TV app for Google TV and Android TV.</li>
+                        <li><a href="https://heyshivm-cab-demo.vercel.app/dark-luxe/">Cab Concept A · Obsidian</a>, <a href="https://heyshivm-cab-demo.vercel.app/golden-travel/">B · Golden Hour</a> and <a href="https://heyshivm-cab-demo.vercel.app/bold-kinetic/">C · Kinetic</a>: website concepts for a cab company.</li>
+                    </ul>
+                </noscript>
             </div>
         </section>
 
