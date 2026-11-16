@@ -1506,6 +1506,9 @@
      max-width: 560px;
      margin: 0 auto;
      transform-style: preserve-3d;
+     /* The grid plane sits at depth 0; the right-hand cards float behind it (negative translateZ),
+        so the plane itself must not catch their clicks. */
+     pointer-events: none;
  }
 
  .work-card {
@@ -1515,6 +1518,7 @@
      transform-style: preserve-3d;
      transition: opacity 0.4s ease;
      cursor: pointer;
+     pointer-events: auto;
  }
 
  .work-card[aria-disabled="true"] {
@@ -2821,5 +2825,426 @@
      .ai-socials {
          justify-content: center;
          gap: 1.5rem;
+     }
+ }
+ /* ===== Live 3D character in the hero (desktop) =====
+    Hovering the portrait wakes the 3D version: real head-turn footage drawn on the GPU (assets/shivam-3d),
+    looking wherever the cursor is. The 16:9 footage box covers the hero the way the photos do. */
+ .hero-3d {
+     position: absolute;
+     inset: 0;
+     overflow: hidden;
+     background: #000;
+     opacity: 0;
+     pointer-events: none;
+     z-index: 1;
+     -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);
+     mask-image: linear-gradient(to bottom, #000 75%, transparent 100%);
+ }
+
+ .hero-3d .ht {
+     position: absolute;
+     left: 50%;
+     top: 50%;
+     width: max(100%, 177.78vh);
+     aspect-ratio: 16 / 9;
+     transform: translate(-50%, -50%);
+ }
+
+ .hero-3d .ht-canvas {
+     position: absolute;
+     left: 21.6667%;
+     top: 0;
+     width: 57.0833%;
+     height: 100%;
+     display: block;
+     max-width: none;
+ }
+
+ .hero-3d-hint {
+     position: absolute;
+     left: 50%;
+     bottom: 5.5vh;
+     transform: translateX(-50%);
+     z-index: 4;
+     display: none;
+     align-items: center;
+     gap: 0.55rem;
+     padding: 0.45rem 0.9rem;
+     border-radius: 999px;
+     background: rgba(10, 10, 16, 0.45);
+     border: 1px solid rgba(255, 255, 255, 0.12);
+     -webkit-backdrop-filter: blur(10px);
+     backdrop-filter: blur(10px);
+     font-family: 'Space Mono', monospace;
+     font-size: 0.7rem;
+     letter-spacing: 0.12em;
+     text-transform: uppercase;
+     color: rgba(255, 255, 255, 0.78);
+     pointer-events: none;
+     white-space: nowrap;
+ }
+
+ .hero-3d-hint span {
+     text-shadow: none;
+ }
+
+ .hero.has-live-3d .hero-3d-hint {
+     display: inline-flex;
+ }
+
+ .hero-3d-hint-dot {
+     width: 6px;
+     height: 6px;
+     border-radius: 50%;
+     background: #6ef2a6;
+     box-shadow: 0 0 10px #6ef2a6;
+ }
+
+ .hero-3d-hint .hint-live,
+ .hero.is-3d .hero-3d-hint .hint-idle {
+     display: none;
+ }
+
+ .hero.is-3d .hero-3d-hint .hint-live {
+     display: inline;
+ }
+
+ /* ===== Studio: Sqaron Technologies ===== */
+ .studio {
+     position: relative;
+     overflow: hidden;
+     padding: 8rem max(1.5rem, 5vw) 8rem;
+     background:
+         radial-gradient(60% 50% at 82% 8%, rgba(139, 108, 255, 0.20), transparent 70%),
+         radial-gradient(50% 45% at 8% 92%, rgba(255, 106, 213, 0.12), transparent 70%),
+         #0a0a10;
+     color: #f4f2ff;
+ }
+
+ .studio,
+ .studio * {
+     text-shadow: none;
+ }
+
+ .studio-word {
+     position: absolute;
+     left: 50%;
+     top: 2.5rem;
+     width: min(1400px, 112vw);
+     height: auto;
+     transform: translateX(-50%);
+     z-index: 0;
+     pointer-events: none;
+     overflow: visible;
+ }
+
+ .studio-word text {
+     font-family: 'Inter', sans-serif;
+     font-weight: 900;
+     font-size: 236px;
+     letter-spacing: -0.04em;
+ }
+
+ .studio-word-line {
+     fill: none;
+     stroke: rgba(255, 255, 255, 0.12);
+     stroke-width: 1.2;
+ }
+
+ .studio-word-ink {
+     fill: url(#studioInk);
+ }
+
+ .studio-inner {
+     position: relative;
+     z-index: 1;
+     max-width: 1180px;
+     margin: 0 auto;
+     display: grid;
+     gap: 3rem;
+ }
+
+ .studio-kicker {
+     display: flex;
+     align-items: center;
+     gap: 0.6rem;
+     margin-top: 9rem;
+     font-family: 'Space Mono', monospace;
+     font-size: 0.78rem;
+     letter-spacing: 0.14em;
+     text-transform: uppercase;
+     color: rgba(244, 242, 255, 0.72);
+ }
+
+ .studio-dot {
+     width: 8px;
+     height: 8px;
+     border-radius: 50%;
+     background: #6ef2a6;
+     box-shadow: 0 0 12px #6ef2a6;
+     flex: none;
+ }
+
+ .studio .studio-title {
+     font-family: 'Inter', sans-serif !important;
+     text-transform: none !important;
+     font-weight: 800;
+     font-size: clamp(2.6rem, 7.2vw, 6.6rem);
+     line-height: 0.98;
+     letter-spacing: -0.035em;
+     margin: -1.5rem 0 0;
+     text-wrap: balance;
+ }
+
+ .studio-title em {
+     font-family: 'Instrument Serif', Georgia, serif;
+     font-style: italic;
+     font-weight: 400;
+     letter-spacing: -0.01em;
+     padding-right: 0.08em;
+     background: linear-gradient(90deg, #b39dff, #ff7ad9 55%, #6fe7ff);
+     -webkit-background-clip: text;
+     background-clip: text;
+     color: transparent;
+ }
+
+ .studio-lede {
+     max-width: 64ch;
+     margin: 0;
+     font-size: clamp(1rem, 1.35vw, 1.2rem);
+     line-height: 1.75;
+     color: rgba(244, 242, 255, 0.78);
+ }
+
+ .studio-lede strong {
+     display: block;
+     margin-bottom: 0.4rem;
+     color: #fff;
+     font-weight: 600;
+ }
+
+ .studio-founders {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     gap: 1.25rem;
+ }
+
+ .studio-card {
+     position: relative;
+     display: flex;
+     flex-direction: column;
+     gap: 0.75rem;
+     min-width: 0;
+     padding: 2rem;
+     border-radius: 22px;
+     background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     color: inherit;
+     text-decoration: none;
+     overflow: hidden;
+     transition: transform 0.35s ease, background 0.35s ease, border-color 0.35s ease;
+ }
+
+ .studio-card::after {
+     content: '';
+     position: absolute;
+     inset: auto -20% -60% auto;
+     width: 70%;
+     aspect-ratio: 1;
+     border-radius: 50%;
+     background: radial-gradient(closest-side, rgba(139, 108, 255, 0.35), transparent);
+     opacity: 0;
+     transition: opacity 0.4s ease;
+     pointer-events: none;
+ }
+
+ .studio-card--back::after {
+     background: radial-gradient(closest-side, rgba(110, 242, 166, 0.3), transparent);
+ }
+
+ .studio-card:hover {
+     transform: translateY(-6px);
+     border-color: rgba(179, 157, 255, 0.55);
+     background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+ }
+
+ .studio-card--back:hover {
+     border-color: rgba(110, 242, 166, 0.5);
+ }
+
+ .studio-card:hover::after {
+     opacity: 1;
+ }
+
+ .studio-card-tag {
+     font-family: 'Space Mono', monospace;
+     font-size: 0.74rem;
+     letter-spacing: 0.12em;
+     text-transform: uppercase;
+     color: #b39dff;
+ }
+
+ .studio-card--back .studio-card-tag {
+     color: #6ef2a6;
+ }
+
+ .studio-card-name {
+     font-size: clamp(1.5rem, 2.4vw, 2rem);
+     font-weight: 700;
+     letter-spacing: -0.02em;
+     color: #fff;
+ }
+
+ .studio-card-role {
+     line-height: 1.6;
+     color: rgba(244, 242, 255, 0.74);
+ }
+
+ .studio-card-stack {
+     font-family: 'Space Mono', monospace;
+     font-size: 0.78rem;
+     color: rgba(244, 242, 255, 0.55);
+ }
+
+ .studio-card-go {
+     margin-top: auto;
+     padding-top: 0.6rem;
+     font-weight: 600;
+     color: #fff;
+ }
+
+ .studio-services {
+     list-style: none;
+     margin: 0;
+     padding: 0;
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0, 1fr));
+     column-gap: 2rem;
+     border-top: 1px solid rgba(255, 255, 255, 0.1);
+ }
+
+ .studio-services li {
+     display: flex;
+     align-items: baseline;
+     gap: 1rem;
+     padding: 1.25rem 0.2rem;
+     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+     font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+     font-weight: 600;
+     color: #fff;
+ }
+
+ .studio-services li span {
+     font-family: 'Space Mono', monospace;
+     font-size: 0.75rem;
+     font-weight: 400;
+     color: rgba(244, 242, 255, 0.45);
+ }
+
+ .studio-numbers {
+     display: grid;
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+     gap: 1.5rem;
+     margin: 0;
+ }
+
+ .studio-numbers div {
+     padding-top: 1rem;
+     border-top: 1px solid rgba(255, 255, 255, 0.14);
+ }
+
+ .studio-numbers dt {
+     font-size: clamp(2.4rem, 5vw, 4.2rem);
+     font-weight: 800;
+     line-height: 1;
+     letter-spacing: -0.04em;
+     font-variant-numeric: tabular-nums;
+     background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0.55));
+     -webkit-background-clip: text;
+     background-clip: text;
+     color: transparent;
+ }
+
+ .studio-numbers dd {
+     margin: 0.55rem 0 0;
+     font-size: 0.95rem;
+     line-height: 1.5;
+     color: rgba(244, 242, 255, 0.66);
+ }
+
+ .studio-cta {
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+     gap: 1.2rem 2rem;
+ }
+
+ .studio-btn {
+     display: inline-flex;
+     align-items: center;
+     gap: 0.6rem;
+     padding: 1rem 1.6rem;
+     border-radius: 999px;
+     background: #fff;
+     color: #0a0a10;
+     font-weight: 700;
+     text-decoration: none;
+     box-shadow: 0 10px 40px rgba(139, 108, 255, 0.4);
+     transition: box-shadow 0.3s ease;
+ }
+
+ .studio-btn:hover {
+     box-shadow: 0 14px 54px rgba(255, 106, 213, 0.5);
+ }
+
+ .studio-link {
+     color: rgba(244, 242, 255, 0.86);
+     text-decoration: underline;
+     text-underline-offset: 4px;
+ }
+
+ @media (max-width: 900px) {
+     .studio {
+         padding-block: 6rem;
+     }
+
+     .studio-kicker {
+         margin-top: 6rem;
+     }
+
+     .studio-founders {
+         grid-template-columns: minmax(0, 1fr);
+     }
+
+     .studio-services {
+         grid-template-columns: repeat(2, minmax(0, 1fr));
+     }
+
+     .studio-numbers {
+         grid-template-columns: repeat(2, minmax(0, 1fr));
+     }
+ }
+
+ @media (max-width: 560px) {
+     .studio-word {
+         top: 3.5rem;
+         width: 130vw;
+     }
+
+     .studio-kicker {
+         margin-top: 3.5rem;
+     }
+
+     .studio .studio-title {
+         margin-top: 0;
+     }
+
+     .studio-card {
+         padding: 1.5rem;
+     }
+
+     .studio-services {
+         grid-template-columns: minmax(0, 1fr);
      }
  }

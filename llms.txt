@@ -21,6 +21,12 @@
   Website https://orbit-os-tv.vercel.app/ · code https://github.com/shivamj56/orbit-os ·
   Google Play https://play.google.com/store/apps/details?id=dev.shiv.orbit
 
+## Studio
+- Sqaron Technologies (https://sqaron.dev/): the two-founder product studio Shivam co-founded with Saksham Srivastava.
+  Shivam leads product, design, apps and the front end; Saksham leads the back end, AI and data. Websites that sell,
+  mobile apps, SaaS and dashboards, AI agents and automation, Chrome extensions, backends and APIs.
+  Shivam's studio page: https://sqaron.dev/shivam-jha/
+
 ## Design work
 - Three website concepts and a booking dashboard for a corporate cab and tours company (sample brand Safarline):
   Obsidian https://heyshivm-cab-demo.vercel.app/dark-luxe/ · Golden Hour https://heyshivm-cab-demo.vercel.app/golden-travel/ ·

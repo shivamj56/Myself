@@ -126,18 +126,78 @@ if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     });
 }
 
-// --- Hero Background Reveal ---
+// --- Hero Background Reveal: the 3D you ---
+// Hovering the portrait wakes the 3D character. On desktop it is the live one from sqaron.dev
+// (assets/shivam-3d): it follows the cursor anywhere in the hero and smiles when you reach for
+// "See my work". Phones, data-saver and browsers without WebGL2 keep the still 3D picture.
+const heroEl = document.querySelector('.hero');
 const heroBgOverlay = document.querySelector('.hero-bg-overlay');
 const heroSubjectTrigger = document.querySelector('.hero-subject-hover');
+const hero3d = document.querySelector('.hero-3d');
+const heroCta = document.querySelector('.hd-btn');
+let liveHead = null;
+let threeD = false;
+
+const show3D = (on) => {
+    if (on === threeD) return;
+    threeD = on;
+    if (heroEl) heroEl.classList.toggle('is-3d', on);
+    if (on) {
+        if (liveHead) {
+            liveHead.run(true);
+            gsap.to(hero3d, { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+        } else {
+            gsap.to(heroBgOverlay, { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+        }
+    } else {
+        gsap.to([hero3d, heroBgOverlay].filter(Boolean), {
+            opacity: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto',
+            onComplete: () => { if (!threeD && liveHead) liveHead.run(false); }
+        });
+    }
+};
 
 if (heroSubjectTrigger && heroBgOverlay) {
-    heroSubjectTrigger.addEventListener('mouseenter', () => {
-        gsap.to(heroBgOverlay, { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: "auto" });
-    });
+    heroSubjectTrigger.addEventListener('mouseenter', () => show3D(true));
+    // the still picture leaves with the cursor; the live character stays while you are anywhere in the hero
+    heroSubjectTrigger.addEventListener('mouseleave', () => { if (!liveHead) show3D(false); });
+    if (heroEl) heroEl.addEventListener('mouseleave', () => show3D(false));
+}
 
-    heroSubjectTrigger.addEventListener('mouseleave', () => {
-        gsap.to(heroBgOverlay, { opacity: 0, duration: 0.6, ease: 'power2.out', overwrite: "auto" });
-    });
+// he smiles when you reach for the work
+if (heroCta) {
+    heroCta.addEventListener('pointerenter', () => { if (liveHead) { show3D(true); liveHead.smile(true); } });
+    heroCta.addEventListener('pointerleave', () => { if (liveHead) liveHead.smile(false); });
+}
+
+// scrolled away: back to the photo, and the GPU rests
+if (heroEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) show3D(false); }, { threshold: 0.35 }).observe(heroEl);
+}
+
+const canLiveHead = hero3d && heroEl
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    && !(navigator.connection && navigator.connection.saveData);
+if (canLiveHead) {
+    const loadHead = () => import('./assets/shivam-3d/head.js')
+        .then(({ mountHead }) => mountHead(hero3d.querySelector('.ht'), hero3d.querySelector('.ht-canvas'), {
+            base: 'assets/shivam-3d/rig',
+            scale: navigator.deviceMemory && navigator.deviceMemory < 6 ? 0.6 : 1,
+        }))
+        .then((head) => {
+            liveHead = head;
+            heroEl.classList.add('has-live-3d');
+            if (threeD) { // the still picture is up: hand over to the live one
+                liveHead.run(true);
+                gsap.to(hero3d, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+                gsap.to(heroBgOverlay, { opacity: 0, duration: 0.5, delay: 0.25, overwrite: 'auto' });
+            }
+        })
+        .catch((err) => console.warn('[portfolio] live 3D character unavailable, keeping the still picture', err));
+    // after the page has settled, so it never competes with the first paint
+    if (document.readyState === 'complete') setTimeout(loadHead, 1200);
+    else window.addEventListener('load', () => setTimeout(loadHead, 1200), { once: true });
 }
 
 // --- Hamburger Menu ---
@@ -248,7 +308,7 @@ if (aboutText) {
 
 // --- Framer Motion Style Scroll Reveals ---
 // One reveal per element (a second, competing tween used to leave some of them blurred)
-gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node, .expertise-center-focus').forEach((elem) => {
+gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node, .expertise-center-focus, .studio-title, .studio-lede, .studio-card, .studio-services li, .studio-numbers > div, .studio-cta').forEach((elem) => {
     gsap.fromTo(elem,
         {
             opacity: 0,
@@ -300,6 +360,57 @@ gsap.to('.parallax-fast', {
     y: -60,
     ease: "none",
     scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
+});
+
+// --- Studio wordmark: the gradient follows your cursor through the outlined SQARON ---
+const studio = document.querySelector('.studio');
+const studioWord = document.querySelector('.studio-word');
+const studioSpot = document.getElementById('studioSpot');
+if (studio && studioWord && studioSpot) {
+    const spot = { x: 600, y: 120, tx: 600, ty: 120 };
+    const t0 = performance.now();
+    let auto = !window.matchMedia('(hover: hover) and (pointer: fine)').matches; // touch: it sweeps on its own
+    let studioVisible = false;
+    let spotRaf = 0;
+    const tickSpot = (now) => {
+        spotRaf = 0;
+        if (auto) {
+            spot.tx = 600 + 430 * Math.sin((now - t0) / 1600);
+            spot.ty = 120 + 30 * Math.sin((now - t0) / 900);
+        }
+        spot.x += (spot.tx - spot.x) * 0.12;
+        spot.y += (spot.ty - spot.y) * 0.12;
+        studioSpot.setAttribute('cx', spot.x.toFixed(1));
+        studioSpot.setAttribute('cy', spot.y.toFixed(1));
+        const moving = auto || Math.abs(spot.tx - spot.x) > 0.5 || Math.abs(spot.ty - spot.y) > 0.5;
+        if (studioVisible && moving) spotRaf = requestAnimationFrame(tickSpot);
+    };
+    const kickSpot = () => { if (!spotRaf && studioVisible) spotRaf = requestAnimationFrame(tickSpot); };
+    studio.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        const m = studioWord.getScreenCTM();
+        if (!m) return;
+        const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+        spot.tx = p.x;
+        spot.ty = p.y;
+        kickSpot();
+    });
+    studio.addEventListener('pointerleave', () => { spot.tx = 600; spot.ty = 120; kickSpot(); });
+    new IntersectionObserver(([entry]) => { studioVisible = entry.isIntersecting; kickSpot(); }).observe(studio);
+}
+
+// --- Studio numbers count up as they come into view ---
+gsap.utils.toArray('.studio-numbers dt[data-count]').forEach((el) => {
+    const end = Number(el.dataset.count);
+    const counter = { v: 0 };
+    gsap.to(counter, {
+        v: end,
+        duration: 1.4,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top bottom-=40', once: true },
+        onStart: () => { el.textContent = '0'; },
+        onUpdate: () => { el.textContent = String(Math.round(counter.v)); },
+    });
 });
 
 // --- Background videos play only while they are on screen (saves battery, keeps scrolling smooth) ---
