@@ -1,8 +1,9 @@
 # Shivam Anil Jha
 
-> Shivam Anil Jha (also written Shivam Jha) is an AI architect and full-stack developer from Pune (Pimpri-Chinchwad),
-> Maharashtra, India, and the maker of Orbit OS, an open-source (GPL-3.0) smart TV remote and setup app for Google TV
-> and Android TV.
+> Shivam Anil Jha (also written Shivam Jha) is an AI architect and full-stack developer from Mumbai, Maharashtra,
+> India. Shivam builds AI products and apps end to end: NexeraAI (an AI career platform), Clonix (website design
+> intelligence for AI code editors) and Orbit OS (an open-source smart TV app on Google Play), and designs websites
+> for businesses.
 
 ## Profiles
 - Portfolio: https://shivamj56.github.io/Myself/
@@ -12,11 +13,19 @@
 - Product Hunt: https://www.producthunt.com/@heyshivm
 - XDA Forums: https://xdaforums.com/m/heyshivm.13499087/
 
-## Work
-- Orbit OS (code): https://github.com/shivamj56/orbit-os
-- Orbit OS (website): https://orbit-os-tv.vercel.app/
-- Orbit OS on Google Play: https://play.google.com/store/apps/details?id=dev.shiv.orbit
+## Products
+- NexeraAI: an AI career platform with résumé analysis, referrals, tech jobs and learning roadmaps. https://nexera-ai-xi.vercel.app/
+- Clonix: turns any website into design tokens, components and packs for Cursor, Claude Code and Windsurf, or clones it
+  into a runnable ZIP. Co-founded with Saksham Srivastava (backend). https://clonix-tau.vercel.app/
+- Orbit OS: an open-source (GPL-3.0) app that sets up Google TV and Android TV from a phone.
+  Website https://orbit-os-tv.vercel.app/ · code https://github.com/shivamj56/orbit-os ·
+  Google Play https://play.google.com/store/apps/details?id=dev.shiv.orbit
+
+## Design work
+- Three website concepts and a booking dashboard for a corporate cab and tours company (sample brand Safarline):
+  Obsidian https://heyshivm-cab-demo.vercel.app/dark-luxe/ · Golden Hour https://heyshivm-cab-demo.vercel.app/golden-travel/ ·
+  Kinetic https://heyshivm-cab-demo.vercel.app/bold-kinetic/ · dashboard https://heyshivm-cab-demo.vercel.app/dashboard/
 
 ## Skills
-AI architecture, prompt engineering, generative AI, full-stack development, Flutter and Dart, React, Android TV and
-Google TV development, open source.
+AI architecture, prompt engineering, generative AI, full-stack development, React, Flutter and Dart, web design,
+Android TV and Google TV development, open source.

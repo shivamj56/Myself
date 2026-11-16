@@ -365,11 +365,11 @@ gsap.to('.parallax-fast', {
 //   Per-card depth is in style.css (.work-card:nth-child(n) translateZ) and DEPTH[] below.
 const PROJECTS = [
     { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "assets/nexera.jpg" },
-    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
-    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
-    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
-    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" },
-    { title: "Coming Soon", description: "A new project is in the works — check back soon.", url: "" }
+    { title: "Clonix", description: "Turns any website into design intelligence: design tokens, components and ready packs for Cursor, Claude Code and Windsurf — or a runnable clone in one click. Co-founded with Saksham Srivastava, who runs the backend.", url: "https://clonix-tau.vercel.app/", image: "assets/clonix.jpg" },
+    { title: "Orbit OS", description: "An open-source (GPL-3.0) app that sets up Google TV and Android TV from your phone — a calmer home screen, a phone remote and one-tap undo. Free on Google Play.", url: "https://orbit-os-tv.vercel.app/", image: "assets/orbit-os.jpg" },
+    { title: "Cab Concept A · Obsidian", description: "Website concept for a corporate cab & tours company: dark corporate luxe, a cinematic pinned hero and a live-tracking phone story. Sample brand: Safarline.", url: "https://heyshivm-cab-demo.vercel.app/dark-luxe/", image: "assets/cab-obsidian.jpg" },
+    { title: "Cab Concept B · Golden Hour", description: "Travel-first concept for the same cab company: an 11-layer illustrated Himalaya parallax where the cab drives as you scroll.", url: "https://heyshivm-cab-demo.vercel.app/golden-travel/", image: "assets/cab-golden-hour.jpg" },
+    { title: "Cab Concept C · Kinetic", description: "Taxi-yellow kinetic type with separate lanes for companies and travellers, and a WhatsApp booking story. Comes with a booking dashboard.", url: "https://heyshivm-cab-demo.vercel.app/bold-kinetic/", image: "assets/cab-kinetic.jpg" }
 ];
 
 (() => {
