@@ -153,12 +153,6 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <!-- Lenis for Smooth Scroll -->
     <script defer src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
-    <!-- Vanilla Tilt for 3D Glassmorphism -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-    <!-- Spline 3D Viewer -->
-    <script type="module" defer src="https://unpkg.com/@splinetool/viewer@1.0.51/build/spline-viewer.js"></script>
-    <!-- HLS.js for Background Video -->
-    <script defer src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
 </head>
 
 <body>
@@ -188,7 +182,7 @@
     <!-- Navigation -->
     <nav class="navbar-wrapper">
         <div class="nav-left">
-            <a href="index.html" class="nav-logo" style="text-decoration: none; color: inherit; cursor: pointer;">© Shivam Jha</a>
+            <a href="#top" class="nav-logo" style="text-decoration: none; color: inherit;">© Shivam Jha</a>
         </div>
         <div class="hamburger-menu" id="hamburger-menu">
             <div class="burger-line"></div>
@@ -206,7 +200,7 @@
     <!-- Main Content -->
     <main>
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero" id="top">
             <!-- Parallax Wrapper safely binds both layers uniformly so Hover and ScrollTrigger do not conflict -->
             <div class="hero-parallax-wrapper" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1;">
                 <div class="hero-bg"></div>
@@ -216,11 +210,6 @@
             <!-- Invisible trigger area over the background subject -->
             <div class="hero-subject-hover"></div>
             <div class="hero-container">
-                <!-- 3D Model -->
-                <div class="hero-3d-model">
-                    <spline-viewer url="https://prod.spline.design/v3nGu0F9BfM-k-vH/scene.splinecode"></spline-viewer>
-                </div>
-
                 <div class="hero-domi-layout">
                     
                     <div class="hd-content">
@@ -252,11 +241,6 @@
 
         <!-- About Section (Multi-Layer Parallax) -->
         <section class="about" id="about" style="position: relative; overflow: hidden; min-height: 80vh; display: flex; align-items: center;">
-            <!-- HLS Background Video -->
-            <div class="about-video-container">
-                <video id="about-video" playsinline muted loop autoplay></video>
-            </div>
-
             <!-- Background Layer (Moves Slower) -->
             <div class="about-bg-layer" style="position: absolute; top: -20%; left: 0; width: 100%; height: 140%; background: radial-gradient(circle at center, rgba(69, 92, 233, 0.08), transparent 70%); z-index: 0; will-change: transform;"></div>
 
@@ -285,8 +269,8 @@
 
         <!-- Technical Specs Section (Puzzle Style) -->
         <section class="puzzle-specs" id="specs">
-            <video class="specs-bg" autoplay loop muted playsinline preload="auto">
-                <source src="assets/specs-bg.mp4" type="video/mp4">
+            <video class="specs-bg" autoplay loop muted playsinline preload="metadata" poster="assets/specs-bg-1080-poster.jpg">
+                <source src="assets/specs-bg-1080.mp4" type="video/mp4">
             </video>
             <!-- Background Radial Rings -->
             <div class="puzzle-rings">
@@ -351,8 +335,8 @@
         <!-- Core Competencies Section -->
         <section class="expertise" id="expertise">
             
-            <video class="expertise-bg-video" autoplay loop muted playsinline>
-                <source src="Animate_in_minimal_202603272137.mp4" type="video/mp4">
+            <video class="expertise-bg-video" autoplay loop muted playsinline preload="metadata" poster="assets/expertise-bg-poster.jpg">
+                <source src="assets/expertise-bg.mp4" type="video/mp4">
             </video>
 
             <!-- 4 Orbital Floating Nodes matching the exact reference UI -->
@@ -408,8 +392,8 @@
 
         <!-- Work Section -->
         <section class="works-showcase" id="work">
-            <video class="works-bg" autoplay loop muted playsinline preload="auto">
-                <source src="assets/agentforge-hero.mp4" type="video/mp4">
+            <video class="works-bg" autoplay loop muted playsinline preload="metadata" poster="assets/works-bg-1080-poster.jpg">
+                <source src="assets/works-bg-1080.mp4" type="video/mp4">
             </video>
             <div class="works-stage">
                 <div class="works-info">
@@ -437,8 +421,8 @@
             <div class="ai-contact-content">
                 <!-- Center Character -->
                 <div class="ai-center-char">
-                    <video autoplay loop muted playsinline class="ai-char-video">
-                        <source src="Animated_portrait_of_202603250310.mp4" type="video/mp4">
+                    <video autoplay loop muted playsinline preload="metadata" poster="assets/contact-portrait-poster.jpg" class="ai-char-video">
+                        <source src="assets/contact-portrait.mp4" type="video/mp4">
                     </video>
                 </div>
 

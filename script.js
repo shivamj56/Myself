@@ -1,38 +1,53 @@
-import { animate, spring, stagger } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
-
 // --- Terminal Preloader Logic ---
+// The page opens at the top, unless the link points at a section (#work, #contact…).
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (!location.hash) window.scrollTo(0, 0);
+
+const hashTarget = () => {
+    if (!location.hash) return null;
+    try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { return null; }
+};
+
+// Hero text waits behind the preloader and comes in when it lifts.
+const heroElements = document.querySelectorAll(".hd-status-pill, .hd-headline, .hd-desc, .hd-btn");
+let heroHidden = false;
+let lenis = null;
+
 const clearPreloader = () => {
     const preloader = document.getElementById('preloader');
     if (preloader && !preloader.classList.contains('fade-out')) {
         preloader.classList.add('fade-out');
-        window.scrollTo(0, 0);
+        if (heroHidden) {
+            gsap.to(heroElements, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.15, clearProps: "transform" });
+        }
+        const target = hashTarget();
+        if (target) {
+            if (lenis) lenis.scrollTo(target, { immediate: true });
+            else target.scrollIntoView();
+        }
     }
 };
 
 window.addEventListener('load', () => {
-    setTimeout(clearPreloader, 1000);
+    setTimeout(clearPreloader, 600);
 });
 
-// Fallback timeout in case window.load hangs due to 403 errors (e.g. Spline)
+// Fallback in case window.load is slow (big videos, slow network). Registered before anything
+// that needs the CDN libraries, so the preloader always lifts.
 setTimeout(clearPreloader, 3500);
+
+gsap.set(heroElements, { opacity: 0, y: 40 });
+heroHidden = true;
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// Normalize scroll for mobile touch devices to ensure smooth pinning
-if (ScrollTrigger.isTouch) {
-    ScrollTrigger.normalizeScroll({ 
-        allowNestedScroll: true,
-        momentum: true
-    });
-}
-
-// Initialize Smooth Scroll (Lenis)
-const lenis = new Lenis({
+// Initialize Smooth Scroll (Lenis). Touch screens keep their own native scrolling.
+lenis = new Lenis({
     lerp: 0.1,
-    direction: 'vertical',
-    gestureDirection: 'vertical',
-    smooth: true,
+    orientation: 'vertical',
+    gestureOrientation: 'vertical',
+    smoothWheel: true,
     smoothTouch: false,
     touchMultiplier: 1,
     infinite: false,
@@ -41,9 +56,11 @@ const lenis = new Lenis({
 // Anchor link smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        const id = this.getAttribute('href').slice(1);
+        const target = id && document.getElementById(id);
+        if (!target) return;
         e.preventDefault();
-        const target = this.getAttribute('href');
-        lenis.scrollTo(target, { duration: 2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        lenis.scrollTo(target, { duration: 1.6, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
     });
 });
 
@@ -54,18 +71,26 @@ gsap.ticker.add((time) => {
 });
 gsap.ticker.lagSmoothing(0, 0);
 
-// --- Hide Navbar on Scroll ---
-gsap.to('.navbar-wrapper', {
-    yPercent: -100,
-    opacity: 0,
-    ease: "power2.out",
-    scrollTrigger: {
-        trigger: ".hero-container",
-        start: "bottom top",
-        end: "+=150",
-        scrub: true
-    }
-});
+// --- Navbar: hides while you scroll down, comes back as soon as you scroll up ---
+const navbar = document.querySelector('.navbar-wrapper');
+const navMenuEl = document.getElementById('nav-menu');
+if (navbar) {
+    let lastY = window.scrollY;
+    let ticking = false;
+    const updateNav = () => {
+        const y = window.scrollY;
+        const menuOpen = navMenuEl && navMenuEl.classList.contains('active');
+        navbar.classList.toggle('is-scrolled', y > 80);
+        if (!menuOpen && Math.abs(y - lastY) > 4) {
+            navbar.classList.toggle('is-hidden', y > lastY && y > window.innerHeight * 0.5);
+            lastY = y;
+        }
+        ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(updateNav); }
+    }, { passive: true });
+}
 
 // --- Global Scroll Progress Indicator ---
 gsap.to('.scroll-progress', {
@@ -79,72 +104,11 @@ gsap.to('.scroll-progress', {
     }
 });
 
-
-// --- Staggered Fade-in-up Animations on Load ---
-document.addEventListener("DOMContentLoaded", () => {
-    // Select specific badges, headline, subtitle, and buttons as requested
-    const heroElements = document.querySelectorAll(".hd-status-pill, .hd-headline, .hd-desc, .hd-btn");
-    
-    // Set initial opacity to 0
-    heroElements.forEach(el => el.style.opacity = '0');
-
-    // Run staggered motion load animation
-    if (heroElements.length > 0) {
-        animate(
-            heroElements,
-            { y: [40, 0], opacity: [0, 1] },
-            { delay: stagger(0.15), duration: 0.8, easing: "ease-out" }
-        );
-    }
-});
-
-// --- HLS.js Background Video Component ---
-// Implementation using memoized component mounting/unmounting structure pattern in vanilla JS
-document.addEventListener("DOMContentLoaded", () => {
-    const video = document.getElementById("about-video");
-    const videoSrc = "https://stream.mux.com/9JXDljEVWYwWu01PUkAemafDugK89o01BR6zqJ3aS9u00A.m3u8";
-
-    if (video) {
-        let hls;
-        
-        // Component Mount equivalent
-        const mount = () => {
-            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                hls = new Hls();
-                hls.loadSource(videoSrc);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(err => console.log("Autoplay prevented:", err));
-                });
-            } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-                // Native Safari support fallback
-                video.src = videoSrc;
-                video.addEventListener("loadedmetadata", () => {
-                    video.play().catch(err => console.log("Autoplay prevented:", err));
-                });
-            }
-        };
-
-        // Component Unmount cleanup equivalent 
-        const unmount = () => {
-            if (hls) {
-                hls.destroy();
-            }
-        };
-
-        // Initialize component lifecycle
-        mount();
-        
-        // Setup global reference for manual cleanup if necessary
-        window.aboutVideoCleanup = unmount;
-    }
-});
-
-// --- custom cursor (High-Performance GSAP quickTo) ---
+// --- Custom cursor: only with a real mouse; touch screens keep their normal behaviour ---
 const cursor = document.querySelector('.cursor');
-const editables = document.querySelectorAll('a, .magnetic, .work-item');
 
-if (cursor) {
+if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.documentElement.classList.add('has-custom-cursor');
     // Use GSAP's quickTo for high-frequency mousemove events
     let xTo = gsap.quickTo(cursor, "x", {duration: 0.1, ease: "power3"});
     let yTo = gsap.quickTo(cursor, "y", {duration: 0.1, ease: "power3"});
@@ -152,11 +116,13 @@ if (cursor) {
     document.addEventListener('mousemove', (e) => {
         xTo(e.clientX);
         yTo(e.clientY);
+        cursor.classList.add('is-visible');
     });
+    document.documentElement.addEventListener('mouseleave', () => cursor.classList.remove('is-visible'));
 
-    editables.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+    // One listener covers links, buttons and the project cards that are added later
+    document.addEventListener('mouseover', (e) => {
+        cursor.classList.toggle('active', !!e.target.closest('a, button, .magnetic, .work-card, .hero-subject-hover'));
     });
 }
 
@@ -167,12 +133,10 @@ const heroSubjectTrigger = document.querySelector('.hero-subject-hover');
 if (heroSubjectTrigger && heroBgOverlay) {
     heroSubjectTrigger.addEventListener('mouseenter', () => {
         gsap.to(heroBgOverlay, { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: "auto" });
-        if (cursor) cursor.classList.add('active'); // Enlarge cursor
     });
 
     heroSubjectTrigger.addEventListener('mouseleave', () => {
         gsap.to(heroBgOverlay, { opacity: 0, duration: 0.6, ease: 'power2.out', overwrite: "auto" });
-        if (cursor) cursor.classList.remove('active');
     });
 }
 
@@ -222,35 +186,20 @@ magnetics.forEach((elem) => {
     });
 });
 
-// --- Hero Animations (Scroll Triggered) ---
-gsap.fromTo('.fade-up',
-    { y: 60, opacity: 0 },
-    {
-        y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: 'power2.out',
-        scrollTrigger: {
-            trigger: ".hero-container",
-            start: "top 80%",
-            toggleActions: "play none none none"
-        }
-    }
-);
-
-
-
 // --- Cinematic Hero to Content Transition ---
 const heroSection = document.querySelector('.hero');
 const targetSection = document.querySelector('.about');
 
 if (heroSection && targetSection) {
-    gsap.to(['.hero-domi-layout', '.hero-parallax-wrapper', '.hero-3d-model'], {
+    gsap.to(['.hero-domi-layout', '.hero-parallax-wrapper'], {
         yPercent: 25,
         opacity: 0,
         scale: 0.95,
         ease: "none",
         scrollTrigger: {
             trigger: targetSection,
-            start: "top bottom", 
-            end: "top top",      
+            start: "top bottom",
+            end: "top top",
             scrub: true
         }
     });
@@ -263,7 +212,7 @@ const splitTextNodes = (el) => {
         if (!word.trim()) return ' ';
         return `<span class="fm-word" style="display:inline-block; margin-right:0.25em; opacity:0; filter:blur(10px); transform:translateY(20px);">${word}</span>`;
     }).join('');
-    
+
     Array.from(el.childNodes).forEach(node => {
         if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent;
@@ -298,28 +247,28 @@ if (aboutText) {
 }
 
 // --- Framer Motion Style Scroll Reveals ---
-// Apply ultra-smooth Framer-style blur-fade sequences to all core cards and nodes
-gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node').forEach((elem, index) => {
+// One reveal per element (a second, competing tween used to leave some of them blurred)
+gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node, .expertise-center-focus').forEach((elem) => {
     gsap.fromTo(elem,
-        { 
-            opacity: 0, 
-            y: 80, 
+        {
+            opacity: 0,
+            y: 80,
             filter: "blur(12px)",
             scale: 0.98
         },
         {
-            scrollTrigger: { 
-                trigger: elem, 
-                start: "top 85%", 
-                toggleActions: "play none none reverse" 
+            scrollTrigger: {
+                trigger: elem,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
             },
-            opacity: 1, 
-            y: 0, 
+            opacity: 1,
+            y: 0,
             filter: "blur(0px)",
             scale: 1,
-            duration: 1.2, 
+            duration: 1.2,
             ease: "power4.out",
-            stagger: 0.1
+            clearProps: "filter"
         }
     );
 });
@@ -327,9 +276,9 @@ gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node').fo
 // --- Orbital Node Vector Drawings ---
 gsap.utils.toArray('.ex-line').forEach(line => {
     const isLeft = line.closest('.node-tl') || line.closest('.node-bl');
-    gsap.fromTo(line, 
+    gsap.fromTo(line,
         { scaleX: 0, transformOrigin: isLeft ? 'left center' : 'right center' },
-        { 
+        {
             scaleX: 1, duration: 1.5, ease: "power4.out",
             scrollTrigger: {
                 trigger: ".expertise-center-focus",
@@ -347,17 +296,22 @@ gsap.to('.about-bg-layer', {
     scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
 });
 
-gsap.to('.about-fg-layer', {
-    yPercent: -50,
-    ease: "none",
-    scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
-});
-
 gsap.to('.parallax-fast', {
     y: -60,
     ease: "none",
     scrollTrigger: { trigger: ".about", start: "top bottom", end: "bottom top", scrub: true }
 });
+
+// --- Background videos play only while they are on screen (saves battery, keeps scrolling smooth) ---
+if ('IntersectionObserver' in window) {
+    const videoWatcher = new IntersectionObserver((entries) => {
+        entries.forEach(({ target, isIntersecting }) => {
+            if (isIntersecting) target.play().catch(() => {});
+            else target.pause();
+        });
+    }, { rootMargin: '200px 0px' });
+    document.querySelectorAll('video[autoplay]').forEach((video) => videoWatcher.observe(video));
+}
 
 // --- Work Section: each panel independently looks at the mouse (per-card), over a video bg ---
 // ▸ EDIT YOUR PROJECTS HERE: title, description, live-demo url (opens new tab), optional image.

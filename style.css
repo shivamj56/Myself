@@ -1,5 +1,3 @@
- @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
-
  :root {
      --bg-color: #111111;
      --text-color: #ffffff;
@@ -12,16 +10,25 @@
      margin: 0;
      padding: 0;
      box-sizing: border-box;
+ }
+
+ /* Hide the system cursor only while the custom cursor runs (mouse devices; see script.js) */
+ html.has-custom-cursor,
+ html.has-custom-cursor * {
      cursor: none;
-     /* Hide default cursor for custom cursor */
  }
 
  body {
      background-color: var(--bg-color);
      color: var(--text-color);
      font-family: 'Inter', sans-serif;
-     overflow-x: hidden;
      -webkit-font-smoothing: antialiased;
+ }
+
+ html,
+ body {
+     overflow-x: hidden;
+     overflow-x: clip;
  }
 
  /* Global Typography Synchronization natively injecting the Crypto Spec */
@@ -37,6 +44,13 @@
      letter-spacing: 1px;
  }
 
+ /* The bio paragraph under the About headline reads in normal sentence case */
+ .about-text.about-facts {
+     font-family: 'Inter', sans-serif !important;
+     text-transform: none !important;
+     letter-spacing: normal;
+ }
+
  /* Terminal Preloader */
  #preloader {
      position: fixed;
@@ -48,6 +62,16 @@
      align-items: center;
      transition: background-color 1s ease-in-out, visibility 1.2s;
      overflow: visible;
+     /* Safety net: lift the preloader even if the scripts never run */
+     animation: preloader-failsafe 0.8s ease 8s forwards;
+ }
+
+ @keyframes preloader-failsafe {
+     to {
+         opacity: 0;
+         visibility: hidden;
+         pointer-events: none;
+     }
  }
 
  #preloader.fade-out {
@@ -234,7 +258,9 @@
      pointer-events: none;
      z-index: 9999;
      mix-blend-mode: normal;
-     transition: width 0.3s, height 0.3s, background-color 0.3s, box-shadow 0.3s;
+     display: none;
+     opacity: 0;
+     transition: width 0.3s, height 0.3s, background-color 0.3s, box-shadow 0.3s, opacity 0.2s;
      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.8);
  }
 
@@ -257,6 +283,14 @@
      backdrop-filter: blur(2px);
      border: 1px solid rgba(255, 255, 255, 0.6);
      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.5);
+ }
+
+ html.has-custom-cursor .cursor {
+     display: block;
+ }
+
+ .cursor.is-visible {
+     opacity: 1;
  }
 
  /* Hero Background Overlay (Hover state) */
@@ -337,12 +371,45 @@
      pointer-events: auto;
  }
 
+ .navbar-wrapper {
+     transition: transform 0.35s ease, padding 0.35s ease;
+ }
+
+ /* Glass bar once the page has scrolled (on a pseudo-element, so the full-screen phone menu keeps the viewport as its box) */
+ .navbar-wrapper::before {
+     content: '';
+     position: absolute;
+     inset: 0;
+     background: rgba(12, 12, 16, 0.55);
+     -webkit-backdrop-filter: blur(14px);
+     backdrop-filter: blur(14px);
+     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+     opacity: 0;
+     transition: opacity 0.35s ease;
+     pointer-events: none;
+     z-index: -1;
+ }
+
+ .navbar-wrapper.is-scrolled {
+     padding-top: 1rem;
+     padding-bottom: 1rem;
+ }
+
+ .navbar-wrapper.is-scrolled::before {
+     opacity: 1;
+ }
+
+ .navbar-wrapper.is-hidden {
+     transform: translateY(-110%);
+ }
+
  .nav-left .nav-logo {
      font-size: 1rem;
      font-weight: 400;
      letter-spacing: normal;
      color: rgba(255, 255, 255, 0.9);
      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+     white-space: nowrap;
  }
 
  .nav-minimal-menu {
@@ -1036,7 +1103,7 @@
 
  .ex-sub {
      font-family: 'Inter', sans-serif;
-     color: rgba(255, 255, 255, 0.6);
+     color: rgba(255, 255, 255, 0.8);
      font-size: 1.05rem;
      max-width: 600px;
      margin: 0 auto;
@@ -1142,7 +1209,7 @@
 
  .node-text p {
      font-family: 'Inter', sans-serif;
-     color: rgba(255, 255, 255, 0.4);
+     color: rgba(255, 255, 255, 0.75);
      font-size: 0.85rem;
      margin: 0;
      line-height: 1.4;
@@ -1274,7 +1341,8 @@
      width: 100%;
      height: 100%;
      background: radial-gradient(circle at center, rgba(3, 4, 9, 0.4) 0%, rgba(3, 4, 9, 0.8) 100%);
-     z-index: 0;
+     z-index: 1;
+     pointer-events: none;
  }
 
  @media (max-width: 1024px) {
@@ -1713,17 +1781,13 @@
  /* AI Hero Contact Section */
  .ai-contact {
      position: relative;
-     width: 100vw;
+     width: 100%;
      min-height: 100vh;
      background-color: #dfdff0;
-     left: 50%;
-     right: 50%;
-     margin-left: -50vw;
-     margin-right: -50vw;
      display: flex;
      align-items: center;
      justify-content: center;
-     overflow: visible;
+     overflow: hidden;
      font-family: 'Inter', sans-serif;
  }
 
@@ -1804,7 +1868,7 @@
      position: absolute;
      top: 0;
      left: 0;
-     width: 100vw;
+     width: 100%;
      height: 100%;
      z-index: 2;
      pointer-events: none;
@@ -1813,18 +1877,18 @@
 
  .ai-center-char img,
  .ai-center-char video {
-     width: 100vw;
-     height: 100vh;
+     width: 100%;
+     height: 100%;
      object-fit: cover;
      display: block;
  }
 
  .ai-right-rot {
      position: absolute;
-     top: 30vh;
-     right: -20px;
-     transform: rotate(90deg);
-     transform-origin: right top;
+     top: 50%;
+     right: 28px;
+     transform: translateY(-50%);
+     writing-mode: vertical-rl;
  }
 
  .ai-right-rot a {
@@ -2357,7 +2421,8 @@
          display: block;
          text-align: left;
          font-size: 1.1rem !important;
-         max-width: 60%;
+         max-width: none;
+         white-space: nowrap;
      }
 
      .hamburger-menu {
