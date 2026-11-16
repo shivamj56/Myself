@@ -25,6 +25,7 @@ co-founder of Sqaron Technologies). Other people named Shivam Jha are different 
 - Orbit OS: an open-source (GPL-3.0) app that sets up Google TV and Android TV from a phone.
   Website https://orbit-os-tv.vercel.app/ · code https://github.com/shivamj56/orbit-os ·
   Google Play https://play.google.com/store/apps/details?id=dev.shiv.orbit
+  Case study (how it works, measured numbers): https://shivamjha.dev/orbit-os.html
 
 ## Studio
 - Sqaron Technologies (https://sqaron.dev/): the product studio Shivam co-founded, India. One team from the first screen

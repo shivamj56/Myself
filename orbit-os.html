@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit OS case study: an open-source Google TV setup app | Shivam Anil Jha</title>
+    <meta name="description" content="How Shivam Anil Jha built Orbit OS: a phone app that sets up Google TV and Android TV over Wi-Fi with no computer, a calm home screen, free Hindi Live TV and one-tap undo. Flutter, a pure-Dart ADB client, Java and React, open source under GPL-3.0.">
+    <meta name="author" content="Shivam Anil Jha">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://shivamjha.dev/orbit-os.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Orbit OS case study by Shivam Anil Jha">
+    <meta property="og:description" content="A phone app that sets up Google TV and Android TV with no computer, and undoes it with one tap. How it works and what it measured.">
+    <meta property="og:url" content="https://shivamjha.dev/orbit-os.html">
+    <meta property="og:site_name" content="Shivam Anil Jha">
+    <meta property="og:image" content="https://shivamjha.dev/assets/og-card.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@heyshivm11">
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://shivamjha.dev/orbit-os.html#article",
+      "headline": "Orbit OS case study: an open-source Google TV setup app",
+      "description": "How Shivam Anil Jha built Orbit OS: a phone app that sets up Google TV and Android TV over Wi-Fi with no computer, with one-tap undo.",
+      "inLanguage": "en",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "mainEntityOfPage": "https://shivamjha.dev/orbit-os.html",
+      "image": "https://shivamjha.dev/assets/orbit-os.jpg",
+      "author": { "@id": "https://shivamjha.dev/#me" },
+      "about": { "@id": "https://shivamjha.dev/orbit-os.html#app" },
+      "isPartOf": { "@id": "https://shivamjha.dev/#website" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://shivamjha.dev/orbit-os.html#app",
+      "name": "Orbit OS",
+      "alternateName": "Orbit OS: Smart TV Remote",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Android",
+      "url": "https://orbit-os-tv.vercel.app/",
+      "downloadUrl": "https://play.google.com/store/apps/details?id=dev.shiv.orbit",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+      "author": { "@id": "https://shivamjha.dev/#me" },
+      "sameAs": ["https://github.com/shivamj56/orbit-os", "https://play.google.com/store/apps/details?id=dev.shiv.orbit"]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://shivamjha.dev/#me",
+      "name": "Shivam Anil Jha",
+      "alternateName": "Shivam Jha",
+      "url": "https://shivamjha.dev/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Shivam Anil Jha", "item": "https://shivamjha.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Orbit OS case study" }
+      ]
+    }
+  ]
+}
+    </script>
+    <style>
+        :root { --bg: #0a0a10; --fg: #f4f2ff; --muted: rgba(244, 242, 255, 0.72); --line: rgba(255, 255, 255, 0.1); --accent: #b39dff; --card: rgba(255, 255, 255, 0.04); }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.7 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+        main { max-width: 760px; margin: 0 auto; padding: 3.5rem max(1.25rem, 5vw) 5rem; }
+        .crumbs { font-size: 0.9rem; color: var(--muted); }
+        .crumbs a { color: var(--muted); }
+        h1 { margin: 1.2rem 0 0.4rem; font-size: clamp(2rem, 6vw, 2.9rem); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+        .role { margin: 0; color: var(--muted); }
+        figure { margin: 2rem 0; }
+        figure img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 0 0 1px var(--line); display: block; }
+        figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--muted); }
+        h2 { margin: 2.6rem 0 0.6rem; font-size: 1.3rem; letter-spacing: -0.01em; }
+        p, li, dd { color: var(--muted); }
+        strong { color: var(--fg); }
+        a { color: var(--fg); text-underline-offset: 3px; }
+        code { font-family: ui-monospace, Menlo, monospace; font-size: 0.86em; background: var(--card); padding: 0.05em 0.35em; border-radius: 6px; overflow-wrap: anywhere; }
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.5rem; margin: 1.5rem 0 0; }
+        dt { font-family: "Space Mono", ui-monospace, monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(244, 242, 255, 0.5); padding-top: 0.25rem; }
+        dd { margin: 0; color: var(--fg); }
+        .numbers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 1.4rem 0; }
+        .numbers div { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+        .numbers b { display: block; font-size: 1.6rem; letter-spacing: -0.02em; color: var(--fg); }
+        .numbers span { font-size: 0.88rem; color: var(--muted); }
+        .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 2rem 0 0; }
+        .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; }
+        .links a.primary { background: var(--accent); border-color: var(--accent); color: #0a0a10; }
+        .back { display: inline-block; margin-top: 2.5rem; color: var(--accent); }
+        @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0.2rem; } dd { margin-bottom: 0.6rem; } }
+    </style>
+</head>
+
+<body>
+    <main>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="./">Shivam Anil Jha</a> › Case study</nav>
+        <h1>Orbit OS: setting up a Google TV from a phone, with one-tap undo</h1>
+        <p class="role">A case study by Shivam Anil Jha · AI architect &amp; full-stack developer, Mumbai · 16 November 2026</p>
+
+        <figure>
+            <img src="assets/orbit-os.jpg" width="1024" height="640" alt="Orbit OS on Google Play: a smart TV remote that also sets up Google TV and Android TV">
+            <figcaption>Orbit OS, free on Google Play and open source on GitHub.</figcaption>
+        </figure>
+
+        <dl>
+            <dt>What</dt><dd>A free Android app: a smart TV remote that also sets the TV up</dd>
+            <dt>For</dt><dd>Google TV and Android TV sets, from a phone on the same Wi-Fi</dd>
+            <dt>Built with</dt><dd>Flutter and Dart (with a pure-Dart ADB client), React and TypeScript, Java for the TV apps, Firebase</dd>
+            <dt>Licence</dt><dd>Open source, GPL-3.0</dd>
+            <dt>Status</dt><dd>Live on Google Play since 14 November 2026; code public since 15 November 2026</dd>
+        </dl>
+
+        <h2>The problem</h2>
+        <p>A new Google TV starts with a home screen full of sponsored banners, rows nobody asked for and dozens of preinstalled apps that wake up with the TV. The fixes that exist assume a computer, a cable and ADB commands typed by hand, with no record of what was changed and no easy way back. Most families never try, and the ones who do can end up with a TV that boots to an empty screen.</p>
+
+        <h2>What Orbit OS does</h2>
+        <ul>
+            <li><strong>Sets the TV up from the phone</strong> over the home Wi-Fi: no computer, no cables, no code. It asks five plain questions and shows the whole plan before it changes anything.</li>
+            <li><strong>Puts a calm home screen</strong> (Orbit Home) on the TV with only the apps the family uses, and about 30 free Hindi Live TV channels from the broadcasters' own streams.</li>
+            <li><strong>Switches off the preinstalled apps you agree to</strong>, never deleting them, and never touching the parts Android needs.</li>
+            <li><strong>Undoes everything with one tap</strong>, and can back up the TV's original setup to the user's own Google Drive.</li>
+            <li><strong>Works as a phone remote</strong>: roll a globe to move, tap for OK, and the phone's volume buttons turn the TV up and down, at home or, after an optional Google sign-in, from anywhere.</li>
+        </ul>
+
+        <h2>How it works</h2>
+        <p>The phone app is written in Flutter. It talks to the TV with a small ADB client written in pure Dart, so no native ADB binary ships inside the app. The user turns on the TV's developer options with its own remote and presses Allow once; from then on, the phone drives two scripts on the TV: one that installs and sets up, and one that undoes.</p>
+        <p>Safety is in the order of operations. Every change is written to an undo record <em>before</em> it happens. The stock home screen is switched off only after Orbit Home has started on the TV, so the TV can never boot to an empty screen. The setup screens on the phone are a React and TypeScript interface running inside the app, which reads a line-by-line progress protocol from the TV and shows each step as it happens. The TV side, Orbit Home and Orbit Live TV, is written in Java.</p>
+        <p>What may be switched off comes from one catalogue in the code, grouped as ads and tracking, apps nobody uses, apps woken at every start, and the stock home screen, plus a list of packages that must never be touched. On TVs it has not been tested on, Orbit offers only the changes known to be safe on any TV.</p>
+
+        <h2>Measured on the test TV</h2>
+        <p>On a Xiaomi TV A Pro with Google TV 14, in daily use:</p>
+        <div class="numbers">
+            <div><b>32</b><span>preinstalled apps switched off, none deleted</span></div>
+            <div><b>60 fps</b><span>Control Center, with 0 janky frames in 400</span></div>
+            <div><b>54–62 MB</b><span>memory used by Orbit Live TV</span></div>
+            <div><b>~5 min</b><span>from Allow to a finished setup</span></div>
+        </div>
+
+        <h2>Open source</h2>
+        <p>The phone app, the TV apps, the setup scripts and the website are public on GitHub under the GNU GPL v3.0. The repository has contributor guides, issue forms for TV reports, and a privacy policy that says what it means: no ads, no analytics and no trackers.</p>
+        <p>For people who want to do it by hand, the Orbit OS website has plain guides: <a href="https://orbit-os-tv.vercel.app/guides/remove-ads-google-tv.html">removing ads from the Google TV home screen</a>, <a href="https://orbit-os-tv.vercel.app/guides/debloat-google-tv.html">debloating Google TV and Android TV</a> and <a href="https://orbit-os-tv.vercel.app/guides/xiaomi-tv-remove-ads.html">cleaning up a Xiaomi TV</a>.</p>
+
+        <div class="links">
+            <a class="primary" href="https://play.google.com/store/apps/details?id=dev.shiv.orbit&amp;referrer=utm_source%3Dshivamjha.dev%26utm_medium%3Dcase-study">Get Orbit OS on Google Play</a>
+            <a href="https://github.com/shivamj56/orbit-os">Code on GitHub</a>
+            <a href="https://orbit-os-tv.vercel.app/">Website</a>
+        </div>
+
+        <a class="back" href="./">← Shivam Anil Jha's portfolio</a> · <a class="back" href="about.html">Who is Shivam Anil Jha?</a>
+    </main>
+</body>
+
+</html>
