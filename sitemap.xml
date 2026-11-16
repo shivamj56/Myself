@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://shivamj56.github.io/Myself/</loc>
+    <loc>https://shivamjha.dev/</loc>
     <lastmod>2026-11-16</lastmod>
     <image:image>
-      <image:loc>https://shivamj56.github.io/Myself/assets/shivam-anil-jha.jpg</image:loc>
+      <image:loc>https://shivamjha.dev/assets/shivam-anil-jha.jpg</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://shivamj56.github.io/Myself/assets/og-card.jpg</image:loc>
+      <image:loc>https://shivamjha.dev/assets/og-card.jpg</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://shivamj56.github.io/Myself/about.html</loc>
+    <loc>https://shivamjha.dev/about.html</loc>
     <lastmod>2026-11-16</lastmod>
     <image:image>
-      <image:loc>https://shivamj56.github.io/Myself/assets/shivam-anil-jha.jpg</image:loc>
+      <image:loc>https://shivamjha.dev/assets/shivam-anil-jha.jpg</image:loc>
     </image:image>
   </url>
 </urlset>

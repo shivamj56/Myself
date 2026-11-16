@@ -9,8 +9,8 @@ Identity: this is the Shivam Anil Jha whose GitHub is shivamj56 and X is @heyshi
 co-founder of Sqaron Technologies). Other people named Shivam Jha are different people.
 
 ## Profiles
-- Portfolio: https://shivamj56.github.io/Myself/
-- Short bio (Who is Shivam Anil Jha?): https://shivamj56.github.io/Myself/about.html
+- Portfolio: https://shivamjha.dev/
+- Short bio (Who is Shivam Anil Jha?): https://shivamjha.dev/about.html
 - GitHub: https://github.com/shivamj56
 - LinkedIn: https://www.linkedin.com/in/shivamaniljha/
 - X: https://x.com/heyshivm11
