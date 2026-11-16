@@ -16,6 +16,7 @@ co-founder of Sqaron Technologies). Other people named Shivam Jha are different 
 - X: https://x.com/heyshivm11
 - Product Hunt: https://www.producthunt.com/@heyshivm
 - XDA Forums: https://xdaforums.com/m/heyshivm.13499087/
+- Wikidata: https://www.wikidata.org/wiki/Q142178914
 
 ## Products
 - NexeraAI: an AI career platform with résumé analysis, referrals, tech jobs and learning roadmaps. https://nexera-ai-xi.vercel.app/
