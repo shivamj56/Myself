@@ -16,16 +16,16 @@
 ## Products
 - NexeraAI: an AI career platform with résumé analysis, referrals, tech jobs and learning roadmaps. https://nexera-ai-xi.vercel.app/
 - Clonix: turns any website into design tokens, components and packs for Cursor, Claude Code and Windsurf, or clones it
-  into a runnable ZIP. Co-founded with Saksham Srivastava (backend). https://clonix-tau.vercel.app/
+  into a runnable ZIP. Built with the Sqaron team. https://clonix-tau.vercel.app/
 - Orbit OS: an open-source (GPL-3.0) app that sets up Google TV and Android TV from a phone.
   Website https://orbit-os-tv.vercel.app/ · code https://github.com/shivamj56/orbit-os ·
   Google Play https://play.google.com/store/apps/details?id=dev.shiv.orbit
 
 ## Studio
-- Sqaron Technologies (https://sqaron.dev/): the two-founder product studio Shivam co-founded with Saksham Srivastava.
-  Shivam leads product, design, apps and the front end; Saksham leads the back end, AI and data. Websites that sell,
-  mobile apps, SaaS and dashboards, AI agents and automation, Chrome extensions, backends and APIs.
-  Shivam's studio page: https://sqaron.dev/shivam-jha/
+- Sqaron Technologies (https://sqaron.dev/): the product studio Shivam co-founded, India. One team from the first screen
+  to the last API call: websites that sell, mobile apps, SaaS and dashboards, AI agents and automation, Chrome
+  extensions, backends and APIs. A written plan and a fixed price within 72 hours; 14 days of support after launch.
+  Shivam leads product, design and the front end. Shivam's studio page: https://sqaron.dev/shivam-jha/
 
 ## Design work
 - Three website concepts and a booking dashboard for a corporate cab and tours company (sample brand Safarline):

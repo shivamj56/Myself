@@ -128,32 +128,70 @@ if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 
 // --- Hero Background Reveal: the 3D you ---
 // Hovering the portrait wakes the 3D character. On desktop it is the live one from sqaron.dev
-// (assets/shivam-3d): it follows the cursor anywhere in the hero and smiles when you reach for
-// "See my work". Phones, data-saver and browsers without WebGL2 keep the still 3D picture.
+// (assets/shivam-3d): it opens as a soft circle from the cursor, follows the cursor anywhere in the
+// hero and closes back into the cursor when you leave. Phones, data-saver and browsers without
+// WebGL2 keep the still 3D picture.
 const heroEl = document.querySelector('.hero');
 const heroBgOverlay = document.querySelector('.hero-bg-overlay');
 const heroSubjectTrigger = document.querySelector('.hero-subject-hover');
 const hero3d = document.querySelector('.hero-3d');
-const heroCta = document.querySelector('.hd-btn');
 let liveHead = null;
 let threeD = false;
+let lastPointer = null;
+const IRIS_HIDDEN = -160; // px: the soft edge is 160 px wide, so this is fully closed
+
+if (heroEl) {
+    heroEl.addEventListener('pointermove', (e) => { lastPointer = { x: e.clientX, y: e.clientY }; }, { passive: true });
+}
+
+// where the circle opens or closes: the cursor, in the 3D layer's own pixels
+const placeIris = () => {
+    const r = hero3d.getBoundingClientRect();
+    const p = lastPointer || { x: r.left + r.width / 2, y: r.top + r.height * 0.6 };
+    hero3d.style.setProperty('--iris-x', `${Math.round(p.x - r.left)}px`);
+    hero3d.style.setProperty('--iris-y', `${Math.round(p.y - r.top)}px`);
+};
+// a radius that clears the farthest corner from the circle's centre
+const irisReach = () => {
+    const r = hero3d.getBoundingClientRect();
+    const x = parseFloat(hero3d.style.getPropertyValue('--iris-x')) || r.width / 2;
+    const y = parseFloat(hero3d.style.getPropertyValue('--iris-y')) || r.height * 0.6;
+    return Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y)) + 40;
+};
 
 const show3D = (on) => {
     if (on === threeD) return;
     threeD = on;
     if (heroEl) heroEl.classList.toggle('is-3d', on);
-    if (on) {
-        if (liveHead) {
+    if (liveHead) {
+        // a circle still on its way: turn it around from where it is, without moving its centre
+        const midway = hero3d.classList.contains('is-revealing');
+        if (!midway) placeIris();
+        const full = irisReach();
+        if (on) {
             liveHead.run(true);
-            gsap.to(hero3d, { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+            if (!midway) gsap.set(hero3d, { opacity: 1, '--iris-r': `${IRIS_HIDDEN}px` });
+            hero3d.classList.add('is-revealing');
+            gsap.to(hero3d, {
+                opacity: 1, '--iris-r': `${full}px`, duration: 0.9, ease: 'power2.inOut', overwrite: 'auto',
+                onComplete: () => { if (threeD) hero3d.classList.remove('is-revealing'); }
+            });
         } else {
-            gsap.to(heroBgOverlay, { opacity: 1, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+            if (!midway) gsap.set(hero3d, { '--iris-r': `${full}px` });
+            hero3d.classList.add('is-revealing');
+            gsap.to(hero3d, {
+                '--iris-r': `${IRIS_HIDDEN}px`, duration: 0.6, ease: 'power2.in', overwrite: 'auto',
+                onComplete: () => {
+                    if (threeD) return;
+                    gsap.set(hero3d, { opacity: 0 });
+                    hero3d.classList.remove('is-revealing');
+                    liveHead.run(false);
+                }
+            });
+            gsap.to(heroBgOverlay, { opacity: 0, duration: 0.3, overwrite: 'auto' });
         }
     } else {
-        gsap.to([hero3d, heroBgOverlay].filter(Boolean), {
-            opacity: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto',
-            onComplete: () => { if (!threeD && liveHead) liveHead.run(false); }
-        });
+        gsap.to(heroBgOverlay, { opacity: on ? 1 : 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
     }
 };
 
@@ -162,12 +200,6 @@ if (heroSubjectTrigger && heroBgOverlay) {
     // the still picture leaves with the cursor; the live character stays while you are anywhere in the hero
     heroSubjectTrigger.addEventListener('mouseleave', () => { if (!liveHead) show3D(false); });
     if (heroEl) heroEl.addEventListener('mouseleave', () => show3D(false));
-}
-
-// he smiles when you reach for the work
-if (heroCta) {
-    heroCta.addEventListener('pointerenter', () => { if (liveHead) { show3D(true); liveHead.smile(true); } });
-    heroCta.addEventListener('pointerleave', () => { if (liveHead) liveHead.smile(false); });
 }
 
 // scrolled away: back to the photo, and the GPU rests
@@ -190,6 +222,7 @@ if (canLiveHead) {
             heroEl.classList.add('has-live-3d');
             if (threeD) { // the still picture is up: hand over to the live one
                 liveHead.run(true);
+                hero3d.classList.remove('is-revealing');
                 gsap.to(hero3d, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
                 gsap.to(heroBgOverlay, { opacity: 0, duration: 0.5, delay: 0.25, overwrite: 'auto' });
             }
@@ -308,7 +341,7 @@ if (aboutText) {
 
 // --- Framer Motion Style Scroll Reveals ---
 // One reveal per element (a second, competing tween used to leave some of them blurred)
-gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node, .expertise-center-focus, .studio-title, .studio-lede, .studio-card, .studio-services li, .studio-numbers > div, .studio-cta').forEach((elem) => {
+gsap.utils.toArray('.expert-card, .puzzle-card, .puzzle-header h2, .ex-node, .expertise-center-focus, .studio-title, .studio-lede, .studio-founder, .studio-site, .studio-services, .studio-steps, .studio-numbers > div, .studio-final').forEach((elem) => {
     gsap.fromTo(elem,
         {
             opacity: 0,
@@ -399,6 +432,23 @@ if (studio && studioWord && studioSpot) {
     new IntersectionObserver(([entry]) => { studioVisible = entry.isIntersecting; kickSpot(); }).observe(studio);
 }
 
+// --- sqaron.dev preview: the browser window leans toward the cursor ---
+const studioSite = document.querySelector('.studio-site');
+const studioFrame = document.querySelector('.studio-site-frame');
+if (studioSite && studioFrame && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    studioSite.addEventListener('pointermove', (e) => {
+        const r = studioSite.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5;
+        const ny = (e.clientY - r.top) / r.height - 0.5;
+        studioFrame.style.setProperty('--tilt-y', `${(nx * 10).toFixed(2)}deg`);
+        studioFrame.style.setProperty('--tilt-x', `${(-ny * 8).toFixed(2)}deg`);
+    });
+    studioSite.addEventListener('pointerleave', () => {
+        studioFrame.style.removeProperty('--tilt-y');
+        studioFrame.style.removeProperty('--tilt-x');
+    });
+}
+
 // --- Studio numbers count up as they come into view ---
 gsap.utils.toArray('.studio-numbers dt[data-count]').forEach((el) => {
     const end = Number(el.dataset.count);
@@ -430,7 +480,7 @@ if ('IntersectionObserver' in window) {
 //   Per-card depth is in style.css (.work-card:nth-child(n) translateZ) and DEPTH[] below.
 const PROJECTS = [
     { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "assets/nexera.jpg" },
-    { title: "Clonix", description: "Turns any website into design intelligence: design tokens, components and ready packs for Cursor, Claude Code and Windsurf — or a runnable clone in one click. Co-founded with Saksham Srivastava, who runs the backend.", url: "https://clonix-tau.vercel.app/", image: "assets/clonix.jpg" },
+    { title: "Clonix", description: "Turns any website into design intelligence: design tokens, components and ready packs for Cursor, Claude Code and Windsurf — or a runnable clone in one click. My product, built with the Sqaron team.", url: "https://clonix-tau.vercel.app/", image: "assets/clonix.jpg" },
     { title: "Orbit OS", description: "An open-source (GPL-3.0) app that sets up Google TV and Android TV from your phone — a calmer home screen, a phone remote and one-tap undo. Free on Google Play.", url: "https://orbit-os-tv.vercel.app/", image: "assets/orbit-os.jpg" },
     { title: "Cab Concept A · Obsidian", description: "Website concept for a corporate cab & tours company: dark corporate luxe, a cinematic pinned hero and a live-tracking phone story. Sample brand: Safarline.", url: "https://heyshivm-cab-demo.vercel.app/dark-luxe/", image: "assets/cab-obsidian.jpg" },
     { title: "Cab Concept B · Golden Hour", description: "Travel-first concept for the same cab company: an 11-layer illustrated Himalaya parallax where the cab drives as you scroll.", url: "https://heyshivm-cab-demo.vercel.app/golden-travel/", image: "assets/cab-golden-hour.jpg" },

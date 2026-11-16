@@ -92,10 +92,18 @@ function compile(gl, type, src) {
   return s;
 }
 
-async function bitmap(url, signal) {
-  const res = await fetch(url, { signal });
-  if (!res.ok) throw new Error(`${url}: ${res.status}`);
-  return createImageBitmap(await res.blob(), { premultiplyAlpha: 'none', colorSpaceConversion: 'none' });
+// one picture of the rig; a dropped connection is retried twice before the rig gives up (portfolio copy)
+async function bitmap(url, signal, tries = 3) {
+  for (let i = 0; ; i++) {
+    try {
+      const res = await fetch(url, { signal });
+      if (!res.ok) throw new Error(`${url}: ${res.status}`);
+      return await createImageBitmap(await res.blob(), { premultiplyAlpha: 'none', colorSpaceConversion: 'none' });
+    } catch (err) {
+      if ((signal && signal.aborted) || i >= tries - 1) throw err;
+      await new Promise((resolve) => setTimeout(resolve, 400 * (i + 1)));
+    }
+  }
 }
 
 // one texture array from tiles of an atlas (or from separate images)
