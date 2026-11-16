@@ -22,7 +22,6 @@ co-founder of Sqaron Technologies). Other people named Shivam Jha are different 
 - Gravatar: https://gravatar.com/glitteryraspberrydc8ec47776
 - YouTube: https://www.youtube.com/channel/UCdFapdJL1Dczeic49rzclzw
 - Instagram: https://www.instagram.com/heyshivm/
-- Photos of Shivam Anil Jha: https://shivamjha.dev/photos.html
 
 ## Products
 - NexeraAI: an AI career platform with résumé analysis, referrals, tech jobs and learning roadmaps. https://nexera-ai-xi.vercel.app/
