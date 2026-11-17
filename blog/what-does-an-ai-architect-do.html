@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What does an AI architect actually do? Five decisions from building NexeraAI and Clonix | Shivam Anil Jha</title>
+    <meta name="description" content="Shivam Anil Jha, an AI architect and full-stack developer in Mumbai, explains the job through five real decisions in NexeraAI and Clonix: where AI goes, real data, several providers, structured output and failure.">
+    <meta name="author" content="Shivam Anil Jha">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://shivamjha.dev/blog/what-does-an-ai-architect-do.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="What does an AI architect actually do? Five decisions from building NexeraAI and Clonix">
+    <meta property="og:description" content="Where AI goes and where it doesn't, real data, several providers behind one client, structured output, and what the app does when the model fails.">
+    <meta property="og:url" content="https://shivamjha.dev/blog/what-does-an-ai-architect-do.html">
+    <meta property="og:site_name" content="Shivam Anil Jha">
+    <meta property="og:image" content="https://shivamjha.dev/assets/og-card.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Shivam Anil Jha, AI architect and full-stack developer from Mumbai, India">
+    <meta property="article:published_time" content="2026-11-17">
+    <meta property="article:author" content="https://shivamjha.dev/about.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://shivamjha.dev/assets/og-card.jpg">
+    <meta name="twitter:creator" content="@heyshivm11">
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://shivamjha.dev/blog/what-does-an-ai-architect-do.html#post",
+      "headline": "What does an AI architect actually do? Five decisions from building NexeraAI and Clonix",
+      "description": "Where AI goes and where it doesn't, real data, several providers behind one client, structured output, and what the app does when the model fails.",
+      "inLanguage": "en",
+      "datePublished": "2026-11-17",
+      "dateModified": "2026-11-17",
+      "url": "https://shivamjha.dev/blog/what-does-an-ai-architect-do.html",
+      "mainEntityOfPage": "https://shivamjha.dev/blog/what-does-an-ai-architect-do.html",
+      "image": "https://shivamjha.dev/assets/og-card.jpg",
+      "keywords": ["AI architect", "what does an AI architect do", "AI architecture", "LLM", "AI product development", "NexeraAI", "Clonix"],
+      "about": { "@type": "Thing", "name": "AI architecture" },
+      "mentions": [
+        { "@id": "https://nexera-ai-xi.vercel.app/#app" },
+        { "@type": "SoftwareApplication", "name": "Clonix", "url": "https://clonix-tau.vercel.app/" },
+        { "@type": "SoftwareApplication", "name": "Orbit OS", "url": "https://orbit-os-tv.vercel.app/" }
+      ],
+      "author": { "@id": "https://shivamjha.dev/#me" },
+      "publisher": { "@id": "https://shivamjha.dev/#me" },
+      "isPartOf": { "@id": "https://shivamjha.dev/blog/#blog" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://nexera-ai-xi.vercel.app/#app",
+      "name": "NexeraAI",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "https://nexera-ai-xi.vercel.app/",
+      "author": { "@id": "https://shivamjha.dev/#me" }
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://shivamjha.dev/blog/#blog",
+      "name": "Shivam Anil Jha's blog",
+      "url": "https://shivamjha.dev/blog/",
+      "isPartOf": { "@id": "https://shivamjha.dev/#website" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://shivamjha.dev/#me",
+      "name": "Shivam Anil Jha",
+      "alternateName": "Shivam Jha",
+      "jobTitle": "AI Architect & Full-Stack Developer",
+      "url": "https://shivamjha.dev/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Shivam Anil Jha", "item": "https://shivamjha.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://shivamjha.dev/blog/" },
+        { "@type": "ListItem", "position": 3, "name": "What does an AI architect actually do?" }
+      ]
+    }
+  ]
+}
+    </script>
+    <style>
+        :root { --bg: #0a0a10; --fg: #f4f2ff; --muted: rgba(244, 242, 255, 0.72); --line: rgba(255, 255, 255, 0.1); --accent: #b39dff; --card: rgba(255, 255, 255, 0.04); }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.7 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+        main { max-width: 760px; margin: 0 auto; padding: 3.5rem max(1.25rem, 5vw) 5rem; }
+        .crumbs { font-size: 0.9rem; color: var(--muted); }
+        .crumbs a { color: var(--muted); }
+        h1 { margin: 1.2rem 0 0.4rem; font-size: clamp(2rem, 6vw, 2.9rem); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+        .role { margin: 0; color: var(--muted); }
+        figure { margin: 2rem 0; }
+        figure img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 0 0 1px var(--line); display: block; }
+        figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--muted); }
+        h2 { margin: 2.6rem 0 0.6rem; font-size: 1.3rem; letter-spacing: -0.01em; }
+        p, li, dd { color: var(--muted); }
+        li { margin: 0.3rem 0; }
+        strong { color: var(--fg); }
+        a { color: var(--fg); text-underline-offset: 3px; }
+        code { font-family: ui-monospace, Menlo, monospace; font-size: 0.86em; background: var(--card); padding: 0.05em 0.35em; border-radius: 6px; overflow-wrap: anywhere; }
+        .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 2rem 0 0; }
+        .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; }
+        .links a.primary { background: var(--accent); border-color: var(--accent); color: #0a0a10; }
+        .author { margin: 2.6rem 0 0; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; font-size: 0.95rem; }
+        .author img { float: left; width: 56px; height: 56px; margin: 3px 14px 4px 0; border-radius: 14px; object-fit: cover; }
+        .author::after { content: ""; display: block; clear: both; }
+        .back { display: inline-block; margin-top: 2.5rem; color: var(--accent); }
+    </style>
+</head>
+
+<body>
+    <main>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Shivam Anil Jha</a> › <a href="/blog/">Blog</a> › AI architect</nav>
+        <article>
+            <h1>What does an AI architect actually do? Five decisions from building NexeraAI and Clonix</h1>
+            <p class="role">By Shivam Anil Jha · AI architect &amp; full-stack developer, Mumbai · <time datetime="2026-11-17">17 November 2026</time></p>
+
+            <figure>
+                <img src="/assets/og-card.jpg" width="1200" height="630" alt="Shivam Anil Jha, AI architect and full-stack developer from Mumbai, India">
+                <figcaption>Shivam Anil Jha, AI architect and full-stack developer, Mumbai.</figcaption>
+            </figure>
+
+            <p>“AI architect” gets used for everything from writing prompts to running a research team. In my work it means something narrower: deciding how a product uses AI models it doesn't train, and building the app so those decisions hold up when real people use it. The model is one part. The rest is where the data comes from, what the app does when the model fails, and how anyone can tell an answer is right.</p>
+            <p>Here are five decisions I made in two of my products: <a href="https://nexera-ai-xi.vercel.app/">NexeraAI</a>, an AI career platform, and <a href="https://clonix-tau.vercel.app/">Clonix</a>, a Chrome extension that turns a website into design tokens for AI code editors. Each one is the kind of call an AI architect is there to make.</p>
+
+            <h2>1. Decide where AI doesn't go</h2>
+            <p>The first decision is often to leave AI out of a step. In Clonix, turning a scanned page into design tokens and editor rules is plain code, with no network call and no model. The same scan always gives the same files, so they can be tested, compared and trusted. AI comes in at exactly one step: turning a section of the page into a component, where judgment helps and there is no single right answer.</p>
+            <p>NexeraAI follows the same idea. A job's skills come from a dictionary match first, and an optional AI pass refines them later. The cheap, predictable path runs every time, and the model adds to it instead of replacing it.</p>
+
+            <h2>2. Ground the model in real data</h2>
+            <p>A model only knows what you give it. NexeraAI's assistant gets today's date, recent web results when they help, and the open roles on NexeraAI that fit the question. Its instructions say to recommend only from that list, by exact title, and never to invent a role.</p>
+            <p>That moves most of the work into the data. NexeraAI has an importer for RemoteOK, Arbeitnow and the public job boards companies run on Greenhouse, Lever and Ashby, one normaliser for every source, and a SHA-1 check on the title, company and location, so the same job posted on five boards shows up once.</p>
+            <p>Clonix does the same for design. It doesn't ask a model what a site looks like. It measures the page in your browser: computed styles, loaded fonts, and only the elements a visitor can actually see, within a budget of 6,000 elements in 300 ms. Anything it doesn't reach is counted and reported, never guessed.</p>
+
+            <h2>3. Put several providers behind one door</h2>
+            <p>Every AI feature in NexeraAI goes through one small client. Groq, Google Gemini and OpenAI accept the same chat-completions format, so one code path serves all three. The client tries the providers that have a key in order (Groq with Llama 3.3 70B first, then Gemini, then OpenAI), retries once on a rate limit or a server error, and then moves on to the next. An outage, a price change or a better model becomes a configuration change, not a rewrite.</p>
+
+            <h2>4. Ask for structure, then check it</h2>
+            <p>Free text is hard to build a product on. Each NexeraAI feature asks the model for one JSON object with fixed keys. The résumé analysis returns a score from 0 to 100, an ATS score, the skills it found, strengths, specific improvements and a short summary. Models sometimes wrap JSON in code fences or add a sentence before it, so a small function strips that and takes the outermost object before parsing. If it still doesn't parse, the error says so.</p>
+            <p>Clonix applies the same thinking to what it hands an editor. Its design brief is written as rules, not suggestions: use the tokens exactly and never approximate, use only the site's breakpoints, and switch dark mode with the site's own selector. The clearer the contract, the less the model has to guess.</p>
+
+            <h2>5. Decide what happens when the AI fails</h2>
+            <p>This is the decision I care about most. In NexeraAI, if every provider fails, the client raises a clear error. It never returns sample data. A made-up résumé score is worse than no score, because people act on it. A scanned résumé is only a picture of text, so NexeraAI says that plainly and asks for a text PDF instead of guessing.</p>
+
+            <h2>The same habit outside AI</h2>
+            <p><a href="https://orbit-os-tv.vercel.app/">Orbit OS</a>, my Google TV app, has no AI in it, but it runs on the same rule: design the failure path first. Before it changes anything, it records how the TV is set up. It switches apps off instead of uninstalling them, writing each one down as soon as Android confirms it, so one tap of Undo brings the TV back. “What happens when this goes wrong?” is the same question either way.</p>
+
+            <h2>AI architect, AI engineer, ML engineer</h2>
+            <p>The titles overlap, and companies use them differently. As I use them, an ML engineer trains and tunes models, and an AI engineer builds features on top of them. An AI architect decides how the whole product uses them: which models, fed with what data, under which rules, and what happens when they fail. Then they make sure the rest of the system can carry those choices. On a small team, one person often does all three.</p>
+
+            <h2>If you're adding AI to a product</h2>
+            <p>Start with the data and the failure path, not the prompt. Decide where AI isn't needed. Put your providers behind one client, ask for structured output, and make the app say so when the model can't answer. Those five decisions do more for a product than any single prompt.</p>
+            <p>If you'd like help with that, I take freelance projects as an AI architect and full-stack developer.</p>
+
+            <div class="links">
+                <a class="primary" href="/hire.html">Hire Shivam</a>
+                <a href="/blog/how-i-built-nexeraai.html">How I built NexeraAI</a>
+                <a href="/blog/clonix-design-tokens-for-ai-editors.html">How Clonix reads a page</a>
+                <a href="/blog/">More posts</a>
+            </div>
+
+            <p class="author"><img src="/assets/shivam-anil-jha.jpg" width="56" height="56" loading="lazy" alt="Shivam Anil Jha, AI architect and full-stack developer from Mumbai, India"><strong>Shivam Anil Jha</strong> is an AI architect and full-stack developer from Mumbai, India. He builds NexeraAI, Clonix and Orbit OS, and co-founded the product studio <a href="https://sqaron.dev/">Sqaron Technologies</a>. <a href="/about.html">More about him</a>.</p>
+        </article>
+
+        <a class="back" href="/blog/">← All posts</a> · <a class="back" href="/">Shivam Anil Jha's portfolio</a>
+    </main>
+</body>
+
+</html>

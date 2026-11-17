@@ -108,6 +108,8 @@
         .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; }
         .links a.primary { background: var(--accent); border-color: var(--accent); color: #0a0a10; }
         .author { margin: 2.6rem 0 0; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; font-size: 0.95rem; }
+        .author img { float: left; width: 56px; height: 56px; margin: 3px 14px 4px 0; border-radius: 14px; object-fit: cover; }
+        .author::after { content: ""; display: block; clear: both; }
         .back { display: inline-block; margin-top: 2.5rem; color: var(--accent); }
         @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0.2rem; } dd { margin-bottom: 0.6rem; } }
     </style>
@@ -184,7 +186,7 @@
                 <a href="/blog/">More posts</a>
             </div>
 
-            <p class="author"><strong>Shivam Anil Jha</strong> is an AI architect and full-stack developer from Mumbai, India. He builds NexeraAI, Clonix and Orbit OS, and co-founded the product studio <a href="https://sqaron.dev/">Sqaron Technologies</a>. <a href="/about.html">More about him</a>.</p>
+            <p class="author"><img src="/assets/shivam-anil-jha.jpg" width="56" height="56" loading="lazy" alt="Shivam Anil Jha, AI architect and full-stack developer from Mumbai, India"><strong>Shivam Anil Jha</strong> is an AI architect and full-stack developer from Mumbai, India. He builds NexeraAI, Clonix and Orbit OS, and co-founded the product studio <a href="https://sqaron.dev/">Sqaron Technologies</a>. <a href="/about.html">More about him</a>.</p>
         </article>
 
         <a class="back" href="/blog/">← All posts</a> · <a class="back" href="/">Shivam Anil Jha's portfolio</a>
