@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Clonix turns a website into design tokens for Cursor, Claude Code and Windsurf | Shivam Anil Jha</title>
+    <meta name="description" content="How Clonix measures a live website (colours by painted area, type roles, spacing) and writes it as tokens and rules for Cursor, Claude Code and Windsurf. By Shivam Anil Jha.">
+    <meta name="author" content="Shivam Anil Jha">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How Clonix turns a website into design tokens for Cursor, Claude Code and Windsurf">
+    <meta property="og:description" content="Measuring what a visitor actually sees, giving each colour and size a role, and writing it where each AI editor reads it.">
+    <meta property="og:url" content="https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html">
+    <meta property="og:site_name" content="Shivam Anil Jha">
+    <meta property="og:image" content="https://shivamjha.dev/assets/clonix.jpg">
+    <meta property="og:image:width" content="1120">
+    <meta property="og:image:height" content="700">
+    <meta property="og:image:alt" content="The Clonix home page: any website, liquefied into design DNA">
+    <meta property="article:published_time" content="2026-11-17">
+    <meta property="article:author" content="https://shivamjha.dev/about.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://shivamjha.dev/assets/clonix.jpg">
+    <meta name="twitter:creator" content="@heyshivm11">
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html#post",
+      "headline": "How Clonix turns a website into design tokens for Cursor, Claude Code and Windsurf",
+      "description": "How Clonix measures a live website (colours by painted area, type roles, spacing) and writes it as tokens and rules for Cursor, Claude Code and Windsurf.",
+      "inLanguage": "en",
+      "datePublished": "2026-11-17",
+      "dateModified": "2026-11-17",
+      "url": "https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html",
+      "mainEntityOfPage": "https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html",
+      "image": "https://shivamjha.dev/assets/clonix.jpg",
+      "keywords": ["Clonix", "design tokens", "Cursor rules", "CLAUDE.md", "Windsurf", "Tailwind CSS", "Chrome extension"],
+      "author": { "@id": "https://shivamjha.dev/#me" },
+      "publisher": { "@id": "https://shivamjha.dev/#me" },
+      "about": { "@id": "https://clonix-tau.vercel.app/#app" },
+      "isPartOf": { "@id": "https://shivamjha.dev/blog/#blog" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://clonix-tau.vercel.app/#app",
+      "name": "Clonix",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "url": "https://clonix-tau.vercel.app/",
+      "author": { "@id": "https://shivamjha.dev/#me" },
+      "contributor": { "@type": "Organization", "name": "Sqaron Technologies", "url": "https://sqaron.dev/" }
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://shivamjha.dev/blog/#blog",
+      "name": "Shivam Anil Jha's blog",
+      "url": "https://shivamjha.dev/blog/",
+      "isPartOf": { "@id": "https://shivamjha.dev/#website" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://shivamjha.dev/#me",
+      "name": "Shivam Anil Jha",
+      "alternateName": "Shivam Jha",
+      "url": "https://shivamjha.dev/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Shivam Anil Jha", "item": "https://shivamjha.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://shivamjha.dev/blog/" },
+        { "@type": "ListItem", "position": 3, "name": "How Clonix turns a website into design tokens" }
+      ]
+    }
+  ]
+}
+    </script>
+    <style>
+        :root { --bg: #0a0a10; --fg: #f4f2ff; --muted: rgba(244, 242, 255, 0.72); --line: rgba(255, 255, 255, 0.1); --accent: #b39dff; --card: rgba(255, 255, 255, 0.04); }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.7 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+        main { max-width: 760px; margin: 0 auto; padding: 3.5rem max(1.25rem, 5vw) 5rem; }
+        .crumbs { font-size: 0.9rem; color: var(--muted); }
+        .crumbs a { color: var(--muted); }
+        h1 { margin: 1.2rem 0 0.4rem; font-size: clamp(2rem, 6vw, 2.9rem); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+        .role { margin: 0; color: var(--muted); }
+        figure { margin: 2rem 0; }
+        figure img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 0 0 1px var(--line); display: block; }
+        figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--muted); }
+        h2 { margin: 2.6rem 0 0.6rem; font-size: 1.3rem; letter-spacing: -0.01em; }
+        p, li, dd { color: var(--muted); }
+        li { margin: 0.3rem 0; }
+        strong { color: var(--fg); }
+        a { color: var(--fg); text-underline-offset: 3px; }
+        code { font-family: ui-monospace, Menlo, monospace; font-size: 0.86em; background: var(--card); padding: 0.05em 0.35em; border-radius: 6px; overflow-wrap: anywhere; }
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.5rem; margin: 1.5rem 0 0; }
+        dt { font-family: "Space Mono", ui-monospace, monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(244, 242, 255, 0.5); padding-top: 0.25rem; }
+        dd { margin: 0; color: var(--fg); }
+        .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 2rem 0 0; }
+        .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; }
+        .links a.primary { background: var(--accent); border-color: var(--accent); color: #0a0a10; }
+        .author { margin: 2.6rem 0 0; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; font-size: 0.95rem; }
+        .back { display: inline-block; margin-top: 2.5rem; color: var(--accent); }
+        @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0.2rem; } dd { margin-bottom: 0.6rem; } }
+    </style>
+</head>
+
+<body>
+    <main>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Shivam Anil Jha</a> › <a href="/blog/">Blog</a> › Clonix</nav>
+        <article>
+            <h1>How Clonix turns a website into design tokens for Cursor, Claude Code and Windsurf</h1>
+            <p class="role">By Shivam Anil Jha · AI architect &amp; full-stack developer, Mumbai · <time datetime="2026-11-17">17 November 2026</time></p>
+
+            <figure>
+                <img src="/assets/clonix.jpg" width="1120" height="700" alt="The Clonix home page: any website, liquefied into design DNA, with a box to scan any site">
+                <figcaption>Clonix's home page, at clonix-tau.vercel.app.</figcaption>
+            </figure>
+
+            <dl>
+                <dt>What</dt><dd>A Chrome extension and a small backend that read a website's design</dd>
+                <dt>Gives you</dt><dd>Rules for Cursor, Claude Code, Windsurf, Codex and Copilot; Tailwind and CSS themes; components</dd>
+                <dt>Built with</dt><dd>TypeScript, React and Tailwind in the extension; Node and Express on the server; Claude for components</dd>
+                <dt>Team</dt><dd>My product, built with the Sqaron team</dd>
+            </dl>
+
+            <p>Ask an AI code editor to make something look like a site you like, and you get something close but wrong. The blue is a shade off, the headings use Tailwind's default sizes, and the shadows are invented. The editor never saw the site; it is working from memory. Clonix is my answer to that: it measures the real page in your browser and hands your editor the numbers.</p>
+            <p>Clonix is a Chrome extension with a small backend, and I built it with the Sqaron team. This post is about the half that reads a page: how a live website becomes design tokens and editor rules.</p>
+
+            <h2>Measuring what a visitor actually sees</h2>
+            <p>The scan is one function that the extension injects into the page's main world, so it can read computed styles, the loaded fonts and the live DOM, not just the HTML source. It makes a single walk over the elements a visitor can actually see. Anything that is <code>display: none</code>, invisible, fully transparent, parked off-screen at -9999px or clipped to a 1px box (skip links and screen-reader text) doesn't count. Decorations marked <code>aria-hidden</code> still count for what they draw, but never as buttons.</p>
+            <p>The walk has a budget: at most 6,000 visible elements in 300 ms. Whatever it doesn't reach is counted and reported with the scan, never guessed.</p>
+            <p>Code reads CSS, but people see paint. Most of the rules in the walk come from that difference:</p>
+            <ul>
+                <li>Colours are weighted by how much of the screen they paint and how many characters are set in them, not by how often they appear in a stylesheet.</li>
+                <li>A fully transparent colour paints nothing, so it is ignored. An early version turned <code>rgba(0, 0, 0, 0)</code> into <code>#000000</code>, which is black.</li>
+                <li>A semi-transparent colour is blended over whatever is under it.</li>
+                <li>A gradient background has no <code>background-color</code>, so its colour is the average of its stops along the line.</li>
+                <li>Newer colour formats such as <code>oklch()</code> and <code>lab()</code> are read by painting them into a 1-pixel canvas, which understands every syntax the browser does.</li>
+                <li>The page background is the deepest full-page box with an opaque background, not just <code>body</code>. On many sites a wrapper inside the app's root element paints over everything.</li>
+            </ul>
+
+            <h2>From measurements to roles</h2>
+            <p>A list of twenty colours doesn't help an editor much. It needs to know what each one is for, so Clonix gives them roles:</p>
+            <ul>
+                <li><strong>Primary</strong>: the most common filled button whose label has at least 3:1 contrast. If the site names that colour in a CSS variable such as <code>--primary</code> or <code>--color-primary</code>, the site's own choice wins.</li>
+                <li><strong>Ink</strong>: the strongest of the colours the headings are set in.</li>
+                <li><strong>Muted</strong>: a quieter grey that still reads at 3:1 against the page.</li>
+                <li><strong>Link and border</strong>: the colour links are drawn in, and the hairline colour that boxes use.</li>
+            </ul>
+            <p>Type works the same way. The h1, h2 and h3 styles come from the headings. Body is the size most of the other text is set in, in its most-used style, and small is the most-used size below that, when there is enough of it. Spacing gets a base of 8 or 4 pixels when that number divides at least 80% of the paddings, gaps and margins it measured; otherwise Clonix lists the values in use.</p>
+
+            <h2>Writing it where each editor looks</h2>
+            <p>From one scan, Clonix writes the same design brief in the place each tool reads it:</p>
+            <ul>
+                <li><code>.cursor/rules/clonix-design.mdc</code>, a Cursor project rule that is always on</li>
+                <li><code>CLAUDE.md</code>, Claude Code's project memory</li>
+                <li><code>.windsurfrules</code> for Windsurf</li>
+                <li><code>AGENTS.md</code> for Codex and other agents, and <code>.github/copilot-instructions.md</code> for Copilot</li>
+                <li><code>tailwind.config.ts</code> for Tailwind v3, <code>clonix-theme.css</code> for Tailwind v4's <code>@theme</code>, plain <code>tokens.css</code>, and <code>design-tokens.json</code> in the W3C design tokens format</li>
+            </ul>
+            <p>This step uses no network and no AI. It is plain code over the scan, so the same scan always gives the same files.</p>
+            <p>Two decisions in those files matter more than they look. First, measured values never take Tailwind's own scale names. A site's heading size becomes <code>text-h1</code>, its card radius <code>rounded-card</code>, its shadow <code>shadow-elevation-1</code>. If Clonix wrote the site's 15px text as <code>text-sm</code>, it would quietly change what <code>text-sm</code> means in your project, and the editor would trust the wrong name.</p>
+            <p>Second, the brief is written as rules, not suggestions. Use the tokens exactly and never approximate. Use only the site's breakpoints, in the direction the site uses them, mobile-first or desktop-first. For dark mode, switch with the site's own selector and use its dark values instead of inverting colours by hand. If the page was scanned with its dark theme showing, the brief says so, so nobody mistakes those colours for the light theme.</p>
+
+            <h2>Components, with AI</h2>
+            <p>The one step that uses AI is turning a section into a component. You pick a section of the page, and Clonix sends its cleaned HTML and the tokens to Claude, which writes a React and Tailwind, Vue 3, or plain HTML and CSS component. The instructions say to use the tokens exactly, to treat the captured HTML as a picture of the layout rather than code to copy, and to drop framework noise like hashed class names, tracking attributes and extra wrapper divs.</p>
+            <p>Clonix can also save a page as an offline ZIP that runs with one click, but that is a story for another post.</p>
+
+            <h2>What I learned</h2>
+            <p>The editor files are the easy part. The work is in measuring what the eye sees: a heading whose highlighted word is in another colour, a link that is styled as a button, a skip link that is technically on the page. Each of those became a rule in the walk, and each rule made the files the editor reads a little more honest.</p>
+
+            <div class="links">
+                <a class="primary" href="https://clonix-tau.vercel.app/">See Clonix</a>
+                <a href="https://sqaron.dev/">Sqaron Technologies</a>
+                <a href="/blog/">More posts</a>
+            </div>
+
+            <p class="author"><strong>Shivam Anil Jha</strong> is an AI architect and full-stack developer from Mumbai, India. He builds NexeraAI, Clonix and Orbit OS, and co-founded the product studio <a href="https://sqaron.dev/">Sqaron Technologies</a>. <a href="/about.html">More about him</a>.</p>
+        </article>
+
+        <a class="back" href="/blog/">← All posts</a> · <a class="back" href="/">Shivam Anil Jha's portfolio</a>
+    </main>
+</body>
+
+</html>

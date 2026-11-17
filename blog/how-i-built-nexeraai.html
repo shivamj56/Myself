@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How I built NexeraAI, an AI career platform built on real job listings | Shivam Anil Jha</title>
+    <meta name="description" content="Shivam Anil Jha on building NexeraAI: importing jobs from eight sources, removing duplicates, reading résumés, and an AI layer that shows an error instead of a made-up result.">
+    <meta name="author" content="Shivam Anil Jha">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://shivamjha.dev/blog/how-i-built-nexeraai.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How I built NexeraAI, an AI career platform built on real job listings">
+    <meta property="og:description" content="Importing jobs from eight sources, removing duplicates, reading résumés, and an AI layer that never fills a gap with made-up data.">
+    <meta property="og:url" content="https://shivamjha.dev/blog/how-i-built-nexeraai.html">
+    <meta property="og:site_name" content="Shivam Anil Jha">
+    <meta property="og:image" content="https://shivamjha.dev/assets/nexera.jpg">
+    <meta property="og:image:width" content="1440">
+    <meta property="og:image:height" content="900">
+    <meta property="og:image:alt" content="The NexeraAI home page with a job search box and an upload-your-résumé button">
+    <meta property="article:published_time" content="2026-11-17">
+    <meta property="article:author" content="https://shivamjha.dev/about.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://shivamjha.dev/assets/nexera.jpg">
+    <meta name="twitter:creator" content="@heyshivm11">
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://shivamjha.dev/blog/how-i-built-nexeraai.html#post",
+      "headline": "How I built NexeraAI, an AI career platform built on real job listings",
+      "description": "Importing jobs from eight sources, removing duplicates, reading résumés, and an AI layer that shows an error instead of a made-up result.",
+      "inLanguage": "en",
+      "datePublished": "2026-11-17",
+      "dateModified": "2026-11-17",
+      "url": "https://shivamjha.dev/blog/how-i-built-nexeraai.html",
+      "mainEntityOfPage": "https://shivamjha.dev/blog/how-i-built-nexeraai.html",
+      "image": "https://shivamjha.dev/assets/nexera.jpg",
+      "keywords": ["NexeraAI", "AI career platform", "job aggregation", "résumé analysis", "Next.js", "LLM"],
+      "author": { "@id": "https://shivamjha.dev/#me" },
+      "publisher": { "@id": "https://shivamjha.dev/#me" },
+      "about": { "@id": "https://nexera-ai-xi.vercel.app/#app" },
+      "isPartOf": { "@id": "https://shivamjha.dev/blog/#blog" }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://nexera-ai-xi.vercel.app/#app",
+      "name": "NexeraAI",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "https://nexera-ai-xi.vercel.app/",
+      "author": { "@id": "https://shivamjha.dev/#me" }
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://shivamjha.dev/blog/#blog",
+      "name": "Shivam Anil Jha's blog",
+      "url": "https://shivamjha.dev/blog/",
+      "isPartOf": { "@id": "https://shivamjha.dev/#website" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://shivamjha.dev/#me",
+      "name": "Shivam Anil Jha",
+      "alternateName": "Shivam Jha",
+      "url": "https://shivamjha.dev/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Shivam Anil Jha", "item": "https://shivamjha.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://shivamjha.dev/blog/" },
+        { "@type": "ListItem", "position": 3, "name": "How I built NexeraAI" }
+      ]
+    }
+  ]
+}
+    </script>
+    <style>
+        :root { --bg: #0a0a10; --fg: #f4f2ff; --muted: rgba(244, 242, 255, 0.72); --line: rgba(255, 255, 255, 0.1); --accent: #b39dff; --card: rgba(255, 255, 255, 0.04); }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.7 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+        main { max-width: 760px; margin: 0 auto; padding: 3.5rem max(1.25rem, 5vw) 5rem; }
+        .crumbs { font-size: 0.9rem; color: var(--muted); }
+        .crumbs a { color: var(--muted); }
+        h1 { margin: 1.2rem 0 0.4rem; font-size: clamp(2rem, 6vw, 2.9rem); line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+        .role { margin: 0; color: var(--muted); }
+        figure { margin: 2rem 0; }
+        figure img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 0 0 1px var(--line); display: block; }
+        figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--muted); }
+        h2 { margin: 2.6rem 0 0.6rem; font-size: 1.3rem; letter-spacing: -0.01em; }
+        p, li, dd { color: var(--muted); }
+        li { margin: 0.3rem 0; }
+        strong { color: var(--fg); }
+        a { color: var(--fg); text-underline-offset: 3px; }
+        code { font-family: ui-monospace, Menlo, monospace; font-size: 0.86em; background: var(--card); padding: 0.05em 0.35em; border-radius: 6px; overflow-wrap: anywhere; }
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.5rem; margin: 1.5rem 0 0; }
+        dt { font-family: "Space Mono", ui-monospace, monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(244, 242, 255, 0.5); padding-top: 0.25rem; }
+        dd { margin: 0; color: var(--fg); }
+        .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 2rem 0 0; }
+        .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; }
+        .links a.primary { background: var(--accent); border-color: var(--accent); color: #0a0a10; }
+        .author { margin: 2.6rem 0 0; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; font-size: 0.95rem; }
+        .back { display: inline-block; margin-top: 2.5rem; color: var(--accent); }
+        @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0.2rem; } dd { margin-bottom: 0.6rem; } }
+    </style>
+</head>
+
+<body>
+    <main>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Shivam Anil Jha</a> › <a href="/blog/">Blog</a> › NexeraAI</nav>
+        <article>
+            <h1>How I built NexeraAI, an AI career platform built on real job listings</h1>
+            <p class="role">By Shivam Anil Jha · AI architect &amp; full-stack developer, Mumbai · <time datetime="2026-11-17">17 November 2026</time></p>
+
+            <figure>
+                <img src="/assets/nexera.jpg" width="1440" height="900" alt="The NexeraAI home page: a job search box, an upload-your-résumé button and a dotted globe">
+                <figcaption>NexeraAI's home page, live at nexera-ai-xi.vercel.app.</figcaption>
+            </figure>
+
+            <dl>
+                <dt>What</dt><dd>An AI career platform: jobs, résumé analysis, referrals and learning roadmaps</dd>
+                <dt>Built with</dt><dd>Next.js and TypeScript, PostgreSQL with Prisma, Auth.js, Tailwind CSS</dd>
+                <dt>AI</dt><dd>One small client for Groq, Google Gemini and OpenAI</dd>
+                <dt>Live at</dt><dd><a href="https://nexera-ai-xi.vercel.app/">nexera-ai-xi.vercel.app</a></dd>
+            </dl>
+
+            <p>NexeraAI is the career platform I have been building since June 2026. You upload your résumé, it reads it, scores it, and shows which open jobs fit you and which skills you are missing. Around that sit referrals, skill-gap lessons with quizzes, a learning roadmap, interview practice, cover letters, a résumé builder and a salary check. Employers can post jobs on it too.</p>
+            <p>The AI gets the attention, but most of the work went into two plainer problems: getting real, clean job listings, and making sure the AI never fills a gap with something made up. This post is about both.</p>
+
+            <h2>Where the jobs come from</h2>
+            <p>An AI career site without real jobs is just a chat window. So the first thing I built was an importer. It reads listings from public sources: RemoteOK, Arbeitnow, and the public job boards that companies run on Greenhouse, Lever and Ashby. Three more, Adzuna, JSearch and Jooble, switch themselves on when their API keys are set. Each source is a small module that returns the same raw shape, so adding a new one doesn't touch the others.</p>
+            <p>Every source formats things its own way, so each listing goes through one normaliser before it is saved:</p>
+            <ul>
+                <li>HTML becomes plain text. Greenhouse sends its HTML encoded twice, so it gets decoded twice.</li>
+                <li>Broken characters are repaired. Text decoded with the wrong character set shows “â€™” where an apostrophe should be, and a small table puts the right character back.</li>
+                <li>Remote, hybrid or on-site is read from the location and the title, and the level (entry, mid, senior or lead) from words like “Sr.” or “Principal” in the title.</li>
+                <li>Skills come from a dictionary match first. An optional AI pass can refine them later, along with a short summary and a flag for postings that look like scams.</li>
+            </ul>
+
+            <h2>The same job, five times</h2>
+            <p>Popular roles are posted on several boards, and nobody wants to scroll past the same opening five times. The importer deals with that in three steps:</p>
+            <ol>
+                <li><strong>Same source, same ID</strong> as a job already saved: update it in place, so its page address never changes.</li>
+                <li><strong>Different source, same job</strong>: skip it. The check is a SHA-1 hash of the title, company and location, lowercased and with spaces collapsed, so “Senior&nbsp;&nbsp;Engineer” and “senior engineer” match.</li>
+                <li><strong>A new job</strong> gets a readable address made from its title, company and place, with -2 or -3 added only when two jobs would collide.</li>
+            </ol>
+
+            <h2>Every job is a real page</h2>
+            <p>Each job has its own page under <code>/jobs/</code>, with JobPosting structured data so Google can show it in job search. A posting counts as valid for 30 days from the day it was posted. The dashboard, the API and the sign-in pages are kept out of search in <code>robots.txt</code>, so only the public pages get indexed.</p>
+
+            <h2>Running the import on Vercel</h2>
+            <p>The import starts from a scheduled call to an endpoint that needs a secret. When Redis is available, the endpoint puts the run on a BullMQ queue and returns. When it isn't, it answers at once and keeps working in the background with Vercel's <code>waitUntil</code>. That second path exists because some external cron services stop waiting after about 30 seconds, and an import can take longer than that. Without it, a run that worked would still be logged as a failure.</p>
+
+            <h2>One AI client, three providers</h2>
+            <p>Every AI feature goes through one small client. Groq, Google Gemini and OpenAI all accept the same chat-completions format, so a single code path serves all three. The client tries the providers that have a key, in order (Groq with Llama 3.3 70B first, then Gemini, then OpenAI), retries once on a rate limit or a server error, and then moves on to the next.</p>
+            <p>The rule I care about most is at the end of that client: if every provider fails, it raises a clear error. It never returns sample data. A made-up résumé score is worse than no score, because people act on it.</p>
+            <p>Each feature asks the model for one JSON object with fixed keys. The résumé analysis, for example, returns a score from 0 to 100, an ATS score, the skills it found, strengths, specific improvements and a short summary. Models sometimes wrap JSON in code fences or add a sentence before it, so a small function strips that and takes the outermost object before parsing. If it still doesn't parse, the error says so.</p>
+
+            <h2>Reading a résumé</h2>
+            <p>Résumés arrive as PDFs. The server pulls the text out with <code>pdf-parse</code> and keeps the file in a private storage bucket. A scanned résumé is only a picture of text, and the text models can't read pictures, so NexeraAI says that plainly and asks for a text PDF instead of guessing.</p>
+
+            <h2>An assistant that only suggests real roles</h2>
+            <p>The Nexera AI chat can talk about anything, but it is built for careers. With each question it gets today's date, recent web results when they help, and the open roles on Nexera that fit the question. Its instructions say to recommend only from that list, by exact title, and never to invent a role. The buttons under an answer are plain search queries, so a tap takes you to real listings.</p>
+            <p>Job matching works the same way. The model compares your résumé with one job's description and returns a match percentage, the skills you have, the skills you are missing, a fit level and a short explanation. I asked for the missing skills and the explanation on purpose: a percentage alone doesn't tell you what to do next.</p>
+
+            <h2>The stack</h2>
+            <ul>
+                <li>Next.js (App Router) and TypeScript, Tailwind CSS v4 with shadcn/ui, and Framer Motion and GSAP for motion</li>
+                <li>PostgreSQL through Prisma, with résumés in a private Supabase storage bucket</li>
+                <li>Auth.js for sign-in with Google, GitHub, or email and a password</li>
+                <li>BullMQ and Redis for the import queue, when Redis is there</li>
+                <li>Razorpay for the paid plans</li>
+            </ul>
+
+            <h2>What I would tell someone building one</h2>
+            <p>Start with the data, not the prompts. Clean listings, no duplicates and page addresses that never change made every AI feature after them simpler, and they are also what search engines see. And decide early what the product does when the AI is down. For NexeraAI the answer is to say so.</p>
+
+            <div class="links">
+                <a class="primary" href="https://nexera-ai-xi.vercel.app/">Try NexeraAI</a>
+                <a href="/blog/">More posts</a>
+            </div>
+
+            <p class="author"><strong>Shivam Anil Jha</strong> is an AI architect and full-stack developer from Mumbai, India. He builds NexeraAI, Clonix and Orbit OS, and co-founded the product studio <a href="https://sqaron.dev/">Sqaron Technologies</a>. <a href="/about.html">More about him</a>.</p>
+        </article>
+
+        <a class="back" href="/blog/">← All posts</a> · <a class="back" href="/">Shivam Anil Jha's portfolio</a>
+    </main>
+</body>
+
+</html>

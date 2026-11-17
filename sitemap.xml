@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://shivamjha.dev/</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <image:image>
       <image:loc>https://shivamjha.dev/assets/shivam-anil-jha.jpg</image:loc>
     </image:image>
@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://shivamjha.dev/about.html</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <image:image>
       <image:loc>https://shivamjha.dev/assets/shivam-anil-jha.jpg</image:loc>
     </image:image>
@@ -20,6 +20,31 @@
   <url>
     <loc>https://shivamjha.dev/orbit-os.html</loc>
     <lastmod>2026-11-16</lastmod>
+    <image:image>
+      <image:loc>https://shivamjha.dev/assets/orbit-os.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shivamjha.dev/blog/</loc>
+    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://shivamjha.dev/blog/how-i-built-nexeraai.html</loc>
+    <lastmod>2026-11-17</lastmod>
+    <image:image>
+      <image:loc>https://shivamjha.dev/assets/nexera.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html</loc>
+    <lastmod>2026-11-17</lastmod>
+    <image:image>
+      <image:loc>https://shivamjha.dev/assets/clonix.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shivamjha.dev/blog/orbit-os-safe-setup-for-family-tvs.html</loc>
+    <lastmod>2026-11-17</lastmod>
     <image:image>
       <image:loc>https://shivamjha.dev/assets/orbit-os.jpg</image:loc>
     </image:image>

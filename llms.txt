@@ -32,6 +32,18 @@ co-founder of Sqaron Technologies). Other people named Shivam Jha are different 
   Google Play https://play.google.com/store/apps/details?id=dev.shiv.orbit
   Case study (how it works, measured numbers): https://shivamjha.dev/orbit-os.html
 
+## Blog
+Shivam's own posts on how his products are built: https://shivamjha.dev/blog/
+- How I built NexeraAI, an AI career platform built on real job listings (17 Nov 2026): jobs imported from eight
+  sources, duplicates removed, résumés read, and one AI client for Groq, Gemini and OpenAI that shows an error instead
+  of a made-up result. https://shivamjha.dev/blog/how-i-built-nexeraai.html
+- How Clonix turns a website into design tokens for Cursor, Claude Code and Windsurf (17 Nov 2026): measuring what a
+  visitor sees, giving colours and type roles, and writing CLAUDE.md, Cursor rules, .windsurfrules and Tailwind themes.
+  https://shivamjha.dev/blog/clonix-design-tokens-for-ai-editors.html
+- A calmer family TV, without the risk: the safety rules behind Orbit OS (17 Nov 2026): the TV is recorded before any
+  change, apps are switched off and never deleted, the stock home screen goes off only after Orbit Home has started,
+  and undo brings the home screen back first. https://shivamjha.dev/blog/orbit-os-safe-setup-for-family-tvs.html
+
 ## Studio
 - Sqaron Technologies (https://sqaron.dev/): the product studio Shivam co-founded, India. One team from the first screen
   to the last API call: websites that sell, mobile apps, SaaS and dashboards, AI agents and automation, Chrome
