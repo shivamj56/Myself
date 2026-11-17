@@ -11,6 +11,7 @@ co-founder of Sqaron Technologies). Other people named Shivam Jha are different 
 ## Profiles
 - Portfolio: https://shivamjha.dev/
 - Short bio (Who is Shivam Anil Jha?): https://shivamjha.dev/about.html
+- Hire (freelance AI architect and full-stack developer, Mumbai, works remotely): https://shivamjha.dev/hire.html
 - GitHub: https://github.com/shivamj56
 - LinkedIn: https://www.linkedin.com/in/shivamaniljha/
 - X: https://x.com/heyshivm11
@@ -55,6 +56,13 @@ Shivam's own posts on how his products are built: https://shivamjha.dev/blog/
   Obsidian https://heyshivm-cab-demo.vercel.app/dark-luxe/ · Golden Hour https://heyshivm-cab-demo.vercel.app/golden-travel/ ·
   Kinetic https://heyshivm-cab-demo.vercel.app/bold-kinetic/ · dashboard https://heyshivm-cab-demo.vercel.app/dashboard/
 
+## Work and hiring
+Shivam takes freelance projects as an AI architect and full-stack developer: AI products and LLM features (several
+providers behind one client, structured outputs, an error instead of a made-up answer), full-stack web apps (Next.js,
+React, TypeScript, Node.js, PostgreSQL), Chrome extensions, and Android, Flutter and Android TV apps. He is based in
+Mumbai and works remotely; Sqaron Technologies joins when a project needs a full team. https://shivamjha.dev/hire.html
+
 ## Skills
-AI architecture, prompt engineering, generative AI, full-stack development, React, Flutter and Dart, web design,
-Android TV and Google TV development, open source.
+AI architecture, prompt engineering, generative AI, large language models, full-stack development, Next.js, React,
+TypeScript, Node.js, PostgreSQL, Chrome extensions, Flutter and Dart, Android and Android TV development, web design,
+open source.
