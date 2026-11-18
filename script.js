@@ -1,3 +1,5 @@
+import { createLivePreview } from './preview.js';
+
 // --- Terminal Preloader Logic ---
 // The page opens at the top, unless the link points at a section (#work, #contact…).
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -475,17 +477,27 @@ if ('IntersectionObserver' in window) {
 }
 
 // --- Work Section: each panel independently looks at the mouse (per-card), over a video bg ---
-// ▸ EDIT YOUR PROJECTS HERE: title, description, live-demo url (opens new tab), optional image.
-//   url "" => "Coming soon" (non-clickable). image => full-bleed screenshot panel.
+// ▸ EDIT YOUR PROJECTS HERE: title, description, live-demo url, optional image.
+//   A click opens the live preview (preview.js): the site in a desktop window with an iPhone beside it.
+//   url "" => "Coming soon" (non-clickable). image => full-bleed screenshot panel and the window's loading picture.
+//   phone => the phone's loading picture; bar / ink => the phone's status bar colour and its text (light or dark).
+//   embed: false => the site refuses to be shown inside other pages, so the preview shows its picture and a button.
 //   Per-card depth is in style.css (.work-card:nth-child(n) translateZ) and DEPTH[] below.
 const PROJECTS = [
-    { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "assets/nexera.jpg" },
-    { title: "Clonix", description: "Turns any website into design intelligence: design tokens, components and ready packs for Cursor, Claude Code and Windsurf — or a runnable clone in one click. My product, built with the Sqaron team.", url: "https://clonix-tau.vercel.app/", image: "assets/clonix.jpg" },
-    { title: "Orbit OS", description: "An open-source (GPL-3.0) app that sets up Google TV and Android TV from your phone — a calmer home screen, a phone remote and one-tap undo. Free on Google Play.", url: "https://orbit-os-tv.vercel.app/", image: "assets/orbit-os.jpg" },
-    { title: "Cab Concept A · Obsidian", description: "Website concept for a corporate cab & tours company: dark corporate luxe, a cinematic pinned hero and a live-tracking phone story. Sample brand: Safarline.", url: "https://heyshivm-cab-demo.vercel.app/dark-luxe/", image: "assets/cab-obsidian.jpg" },
-    { title: "Cab Concept B · Golden Hour", description: "Travel-first concept for the same cab company: an 11-layer illustrated Himalaya parallax where the cab drives as you scroll.", url: "https://heyshivm-cab-demo.vercel.app/golden-travel/", image: "assets/cab-golden-hour.jpg" },
-    { title: "Cab Concept C · Kinetic", description: "Taxi-yellow kinetic type with separate lanes for companies and travellers, and a WhatsApp booking story. Comes with a booking dashboard.", url: "https://heyshivm-cab-demo.vercel.app/bold-kinetic/", image: "assets/cab-kinetic.jpg" }
+    { title: "NexeraAI", description: "An AI-powered job platform — résumé compatibility scoring, top-company referrals, and smart search to fast-track your career.", url: "https://nexera-ai-xi.vercel.app/", image: "assets/nexera.jpg", phone: "assets/preview/phone-nexera.webp", bar: "#020202", ink: "light" },
+    { title: "Clonix", description: "Turns any website into design intelligence: design tokens, components and ready packs for Cursor, Claude Code and Windsurf — or a runnable clone in one click. My product, built with the Sqaron team.", url: "https://clonix-tau.vercel.app/", image: "assets/clonix.jpg", phone: "assets/preview/phone-clonix.webp", bar: "#fcfcfd", ink: "dark", embed: false },
+    { title: "Orbit OS", description: "An open-source (GPL-3.0) app that sets up Google TV and Android TV from your phone — a calmer home screen, a phone remote and one-tap undo. Free on Google Play.", url: "https://orbit-os-tv.vercel.app/", image: "assets/orbit-os.jpg", phone: "assets/preview/phone-orbit-os.webp", bar: "#f2f4f9", ink: "dark" },
+    { title: "Cab Concept A · Obsidian", description: "Website concept for a corporate cab & tours company: dark corporate luxe, a cinematic pinned hero and a live-tracking phone story. Sample brand: Safarline.", url: "https://heyshivm-cab-demo.vercel.app/dark-luxe/", image: "assets/cab-obsidian.jpg", phone: "assets/preview/phone-cab-obsidian.webp", bar: "#0b0d11", ink: "light" },
+    { title: "Cab Concept B · Golden Hour", description: "Travel-first concept for the same cab company: an 11-layer illustrated Himalaya parallax where the cab drives as you scroll.", url: "https://heyshivm-cab-demo.vercel.app/golden-travel/", image: "assets/cab-golden-hour.jpg", phone: "assets/preview/phone-cab-golden-hour.webp", bar: "#96bfd1", ink: "dark" },
+    { title: "Cab Concept C · Kinetic", description: "Taxi-yellow kinetic type with separate lanes for companies and travellers, and a WhatsApp booking story. Comes with a booking dashboard.", url: "https://heyshivm-cab-demo.vercel.app/bold-kinetic/", image: "assets/cab-kinetic.jpg", phone: "assets/preview/phone-cab-kinetic.webp", bar: "#0a0a0b", ink: "light" }
 ];
+
+// The live preview stops the page's smooth scrolling while it is open.
+const livePreview = createLivePreview({
+    onOpen: () => { if (lenis) lenis.stop(); },
+    onClose: () => { if (lenis) lenis.start(); },
+});
+const plainClick = (e) => e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
 (() => {
     const section = document.querySelector('.works-showcase');
@@ -504,7 +516,10 @@ const PROJECTS = [
     ];
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+    let active = null;
+    let activeCard = null;
     const setActive = (p) => {
+        active = p;
         titleEl.textContent = p.title;
         descEl.textContent = p.description;
         if (p.url) { ctaEl.href = p.url; ctaEl.classList.remove('is-disabled'); }
@@ -521,7 +536,7 @@ const PROJECTS = [
         const isLive = !!p.url;
         const tag = isLive ? 'a' : 'div';
         const attrs = isLive
-            ? 'href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer"'
+            ? 'href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer" aria-haspopup="dialog"'
             : 'role="button" tabindex="0" aria-disabled="true"';
         let inner;
         if (isLive && p.image) {
@@ -538,13 +553,31 @@ const PROJECTS = [
     deck.innerHTML = '<div class="works-orbit">' + cardHtml + '</div>';
 
     const cards = Array.from(deck.querySelectorAll('.work-card'));
+    // A touch must not swap the text above the cards before the click lands: the cards would move under the
+    // finger and the tap would be lost. So a mouse hover or keyboard focus shows a project; a tap opens it.
+    let pressedBy = '';
+    deck.addEventListener('pointerdown', (e) => { pressedBy = e.pointerType; }, true);
     cards.forEach((card) => {
         const p = PROJECTS[Number(card.dataset.index)];
-        const activate = () => { cards.forEach((c) => c.classList.remove('is-active')); card.classList.add('is-active'); setActive(p); };
-        card.addEventListener('mouseenter', activate);
-        card.addEventListener('focus', activate);
+        const activate = () => { cards.forEach((c) => c.classList.remove('is-active')); card.classList.add('is-active'); activeCard = card; setActive(p); };
+        card.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') activate(); });
+        card.addEventListener('focus', () => { if (pressedBy !== 'touch' && pressedBy !== 'pen') activate(); pressedBy = ''; });
+        // A click opens the live preview here; Cmd/Ctrl-click and middle-click still open a new tab.
+        card.addEventListener('click', (e) => {
+            pressedBy = '';
+            if (!p.url || !plainClick(e)) return;
+            e.preventDefault();
+            if (activeCard !== card) activate();
+            livePreview.open(p, card);
+        });
     });
     if (PROJECTS.length) setActive(PROJECTS[0]);
+    ctaEl.setAttribute('aria-haspopup', 'dialog');
+    ctaEl.addEventListener('click', (e) => {
+        if (!active || !active.url || !plainClick(e)) return;
+        e.preventDefault();
+        livePreview.open(active, activeCard || ctaEl);
+    });
 
     // Per-card look-at-mouse: each panel rotates toward the cursor based on ITS OWN centre,
     // so every card turns a different amount/direction. Floats at its own translateZ depth.

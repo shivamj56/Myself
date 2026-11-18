@@ -1,0 +1,716 @@
+/* Live preview: a project opens right here, in a macOS-style browser window with an iPhone beside it.
+ * Both show the live site; the iPhone renders the mobile layout. Positions and sizes are set by preview.js. */
+
+.lp {
+    --lp-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --lp-chrome: #24252a;
+    --lp-chrome-top: #2d2e34;
+    --lp-text: #e4e5ea;
+    --lp-muted: #9a9ca6;
+    --lp-ring: rgba(255, 255, 255, 0.12);
+    --lp-glass: rgba(18, 19, 24, 0.78);
+    --lp-accent: #455ce9;
+    --lp-live: #3ddc84;
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--lp-text);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* the page behind stays still, and the system cursor comes back (the custom cursor cannot follow into a site) */
+html.lp-open,
+html.lp-open body {
+    overflow: hidden;
+}
+
+html.lp-open .cursor,
+html.lp-open .cursor-follower {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+html.lp-open .lp,
+html.lp-open .lp * {
+    cursor: auto;
+}
+
+html.lp-open .lp button,
+html.lp-open .lp a,
+html.lp-open .lp .lp-bar {
+    cursor: pointer;
+}
+
+.lp-stage {
+    position: absolute;
+    inset: 0;
+}
+
+.lp-sentinel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.lp-backdrop {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(1200px 700px at 50% 38%, rgba(69, 92, 233, 0.16), transparent 70%),
+        rgba(5, 6, 9, 0.72);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    backdrop-filter: blur(16px) saturate(1.15);
+}
+
+/* ---------- the browser window ---------- */
+.lp-win {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--lp-chrome);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.13),
+        0 0 0 1.5px rgba(0, 0, 0, 0.6),
+        0 50px 120px -30px rgba(0, 0, 0, 0.9),
+        0 30px 80px -50px rgba(69, 92, 233, 0.45);
+    transform-origin: 50% 50%;
+    will-change: transform;
+}
+
+.lp.is-animating .lp-win,
+.lp.is-animating .lp-phone {
+    transition: left 0.5s var(--lp-ease), top 0.5s var(--lp-ease), width 0.5s var(--lp-ease), height 0.5s var(--lp-ease), border-radius 0.5s var(--lp-ease), opacity 0.35s ease;
+}
+
+.lp.is-max .lp-win {
+    border-radius: 0;
+}
+
+.lp-bar {
+    flex: none;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    height: 52px;
+    padding: 0 12px 0 16px;
+    background: linear-gradient(var(--lp-chrome-top), var(--lp-chrome));
+    border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.lp-lights {
+    display: flex;
+    gap: 8px;
+}
+
+.lp-light {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: transparent;
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.32);
+}
+
+.lp-light svg {
+    width: 7px;
+    height: 7px;
+}
+
+.lp-light--close { background: #ff5f57; }
+.lp-light--min { background: #febc2e; }
+.lp-light--max { background: #28c840; }
+
+.lp-lights:hover .lp-light,
+.lp-light:focus-visible {
+    color: rgba(0, 0, 0, 0.62);
+}
+
+.lp-nav {
+    display: flex;
+    gap: 2px;
+}
+
+.lp-nav button,
+.lp-x {
+    width: 30px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--lp-muted);
+    display: grid;
+    place-items: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.lp-nav button:hover,
+.lp-x:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.lp-nav button[aria-pressed="true"] {
+    color: #ffffff;
+    background: rgba(69, 92, 233, 0.32);
+}
+
+.lp-x {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.lp-url {
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: min(100%, 560px);
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 9px;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    color: #dcdde3;
+    font: 500 13px/1 'Inter', system-ui, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.lp-url svg {
+    flex: none;
+    color: #8e909a;
+}
+
+.lp-host {
+    flex: none;
+}
+
+.lp-path {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #8e909a;
+}
+
+.lp-out {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #dcdde3;
+    font: 500 13px/1 'Inter', system-ui, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+}
+
+.lp-out:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.lp-view {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #0d0e12;
+}
+
+.lp-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+    background: #ffffff;
+}
+
+.lp-canvas iframe,
+.lp-pview iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #ffffff;
+}
+
+/* loading: the project's picture with a thin moving line, then the live site fades in over it */
+.lp-loading,
+.lp-ploading {
+    position: absolute;
+    inset: 0;
+    background: #0d0e12;
+    transition: opacity 0.6s var(--lp-ease), visibility 0.6s;
+}
+
+.lp-loading img,
+.lp-ploading img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: brightness(0.82) saturate(0.92);
+}
+
+.lp-loading.is-done,
+.lp-ploading.is-done {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.lp-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #7c8cff, #00e0ff, transparent);
+    animation: lp-load 1.3s var(--lp-ease) infinite;
+}
+
+@keyframes lp-load {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(260%); }
+}
+
+.lp-slow {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    padding: 11px 18px;
+    border-radius: 999px;
+    background: rgba(7, 8, 11, 0.86);
+    color: var(--lp-text);
+    font: 500 13.5px/1 'Inter', system-ui, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: inset 0 0 0 1px var(--lp-ring);
+}
+
+/* a site that refuses to be shown inside other pages (Clonix): its picture and a way out */
+.lp-blocked {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #0d0e12;
+}
+
+.lp-blocked img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: brightness(0.5) saturate(0.85);
+}
+
+.lp-note {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(440px, 86%);
+    padding: 26px 28px;
+    border-radius: 18px;
+    text-align: center;
+    color: var(--lp-text);
+    background: rgba(13, 15, 20, 0.86);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: inset 0 0 0 1px var(--lp-ring), 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+}
+
+.lp-note-kicker {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font: 600 22px/1.15 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.lp-note p {
+    margin: 0 0 18px;
+    color: #a9acb8;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.lp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    background: var(--lp-accent);
+    color: #ffffff;
+    font: 600 14px/1 'Inter', system-ui, sans-serif;
+    text-decoration: none;
+    box-shadow: 0 10px 30px -10px rgba(69, 92, 233, 0.8);
+    transition: transform 0.25s var(--lp-ease), background 0.25s;
+}
+
+.lp-btn:hover {
+    background: #5a6ff0;
+    transform: translateY(-1px);
+}
+
+/* ---------- the iPhone ---------- */
+.lp-phone {
+    position: absolute;
+    will-change: transform;
+    transition: opacity 0.35s ease;
+}
+
+.lp-device {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 429px;
+    height: 888px;
+    border-radius: 74px;
+    transform-origin: 0 0;
+    background: #050506;
+    box-shadow:
+        inset 0 0 0 1.5px #1c1c1f,
+        0 0 0 2px #3a3b40,
+        0 0 0 3.5px #17171a,
+        0 0 0 5px #5b5c63,
+        0 0 0 6px rgba(0, 0, 0, 0.55),
+        0 60px 120px -30px rgba(0, 0, 0, 0.9),
+        0 30px 80px -50px rgba(69, 92, 233, 0.55);
+}
+
+/* the titanium band catches the light along the top-left edge */
+.lp-device::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 79px;
+    pointer-events: none;
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 22%, rgba(255, 255, 255, 0) 78%, rgba(255, 255, 255, 0.12));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    padding: 3.5px;
+}
+
+.lp-key {
+    position: absolute;
+    width: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #2a2b30, #6a6b72 45%, #2a2b30);
+}
+
+.lp-key--action { left: -9px; top: 176px; height: 34px; }
+.lp-key--up { left: -9px; top: 240px; height: 64px; }
+.lp-key--down { left: -9px; top: 318px; height: 64px; }
+.lp-key--side { right: -9px; top: 268px; height: 104px; }
+
+.lp-screen {
+    position: absolute;
+    inset: 18px;
+    border-radius: 56px;
+    overflow: hidden;
+    clip-path: inset(0 round 56px);
+    background: var(--lp-bar, #000000);
+    isolation: isolate;
+}
+
+.lp-status {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 34px 0 50px;
+    color: var(--lp-ink, #ffffff);
+    font: 600 17px/1 'Inter', -apple-system, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.lp-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lp-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    width: 125px;
+    height: 37px;
+    margin-left: -62.5px;
+    border-radius: 20px;
+    background: #000000;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.lp-pview {
+    position: absolute;
+    left: 0;
+    top: 54px;
+    width: 393px;
+    height: 798px;
+    background: #ffffff;
+}
+
+.lp-ploading {
+    z-index: 1;
+}
+
+.lp-ploading img {
+    height: auto;
+    filter: none;
+}
+
+.lp-home {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 140px;
+    height: 5px;
+    margin-left: -70px;
+    border-radius: 3px;
+    background: #ffffff;
+    opacity: 0.9;
+    z-index: 4;
+    pointer-events: none;
+    mix-blend-mode: difference;
+}
+
+/* ---------- the dock under the devices ---------- */
+.lp-dock {
+    position: absolute;
+    left: 50%;
+    bottom: max(18px, env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: calc(100% - 32px);
+}
+
+.lp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: var(--lp-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    color: #d9dbe2;
+    font: 500 13px/1 'Inter', system-ui, sans-serif;
+    white-space: nowrap;
+}
+
+.lp-dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f5b83d;
+    box-shadow: 0 0 0 3px rgba(245, 184, 61, 0.18);
+}
+
+.lp-chip[data-state="synced"] .lp-dot {
+    background: var(--lp-live);
+    box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.2), 0 0 12px rgba(61, 220, 132, 0.7);
+}
+
+.lp-chip[data-state="live"] .lp-dot {
+    background: var(--lp-live);
+    box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.18);
+}
+
+.lp-chip[data-state="blocked"] .lp-dot {
+    background: #8e909a;
+    box-shadow: none;
+}
+
+.lp-seg {
+    display: none;
+    padding: 4px;
+    gap: 2px;
+    border-radius: 999px;
+    background: var(--lp-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.lp-seg button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #c9ccd6;
+    font: 600 13px/1 'Inter', system-ui, sans-serif;
+}
+
+.lp-seg button[aria-pressed="true"] {
+    background: #ffffff;
+    color: #111216;
+}
+
+/* the round close button in the corner */
+.lp-close {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top, 0px));
+    right: max(16px, env(safe-area-inset-right, 0px));
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--lp-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    transition: background 0.2s, transform 0.25s var(--lp-ease);
+}
+
+.lp-close:hover {
+    background: rgba(40, 42, 50, 0.92);
+    transform: rotate(90deg);
+}
+
+.lp :focus-visible {
+    outline: 2px solid #9fb0ff;
+    outline-offset: 2px;
+}
+
+.lp-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* states */
+.lp.is-max .lp-phone,
+.lp.is-phone-hidden .lp-phone {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lp.is-max .lp-dock,
+.lp.is-max .lp-close {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lp.is-overlap .lp-phone {
+    filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55));
+}
+
+.lp.is-blocked .lp-progress,
+.lp.is-blocked .lp-seg,
+.lp.is-blocked .lp-nav button[data-act="reload"] {
+    display: none !important;
+}
+
+/* phones: the window fills the screen; a switch shows the phone layout or the desktop layout */
+.lp.is-solo .lp-win {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.lp.is-solo .lp-bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    height: 56px;
+    padding: 0 8px 0 10px;
+    padding-top: env(safe-area-inset-top, 0px);
+    height: calc(56px + env(safe-area-inset-top, 0px));
+}
+
+.lp.is-solo .lp-lights,
+.lp.is-solo .lp-nav,
+.lp.is-solo .lp-close,
+.lp.is-solo .lp-phone {
+    display: none;
+}
+
+.lp.is-solo .lp-x {
+    display: grid;
+}
+
+.lp.is-solo .lp-url {
+    width: 100%;
+}
+
+.lp.is-solo .lp-out {
+    padding: 10px;
+}
+
+.lp.is-solo .lp-out-text {
+    display: none;
+}
+
+.lp.is-solo .lp-seg {
+    display: inline-flex;
+}
+
+.lp.is-solo .lp-chip {
+    display: none;
+}
+
+.lp.is-solo .lp-view {
+    padding-bottom: 0;
+}
+
+/* the desktop layout on a phone: a small screen with rounded corners, centred */
+.lp.is-solo-desktop .lp-canvas {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.14), 0 80px 160px -40px rgba(0, 0, 0, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lp-progress {
+        animation-duration: 2.6s;
+    }
+    .lp.is-animating .lp-win,
+    .lp.is-animating .lp-phone {
+        transition-duration: 0.01s;
+    }
+}
