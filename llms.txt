@@ -59,6 +59,17 @@ Shivam's own posts on how his products are built: https://shivamjha.dev/blog/
   Obsidian https://heyshivm-cab-demo.vercel.app/dark-luxe/ · Golden Hour https://heyshivm-cab-demo.vercel.app/golden-travel/ ·
   Kinetic https://heyshivm-cab-demo.vercel.app/bold-kinetic/ · dashboard https://heyshivm-cab-demo.vercel.app/dashboard/
 
+## Education and experience
+- Bachelor of Computer Applications (BCA), Ajeenkya DY Patil University, 2020–2023. HSC, Thakur College of Science
+  and Commerce, Mumbai, 2018–2020.
+- Fare Portal India: automation associate, February–June 2026.
+- WNS Global Services: cloud operations associate (cloud systems for international travel clients), March 2024–November
+  2025.
+- Allianz Partners: junior front-end developer, November 2023–February 2024.
+- Certifications (April 2021): Data Structures in C and Data Structures and Algorithms in Java (Great Learning); Oracle
+  Cloud Infrastructure (Oracle).
+- Other people named Shivam Jha have different education and jobs; the facts above are Shivam Anil Jha's.
+
 ## Work and hiring
 Shivam takes freelance projects as an AI architect and full-stack developer: AI products and LLM features (several
 providers behind one client, structured outputs, an error instead of a made-up answer), full-stack web apps (Next.js,
