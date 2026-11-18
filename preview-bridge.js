@@ -95,4 +95,13 @@
         if (d.type === 'hello') window.parent.postMessage({ ns: NS, type: 'ready', v: 1, path: location.pathname }, host);
         else if (d.type === 'scrollTo' && typeof d.p === 'number') go(d);
     });
+
+    // A site that loads this script late (after its page has loaded) announces itself instead of waiting to be asked.
+    try {
+        var from = (location.ancestorOrigins && location.ancestorOrigins[0]) || (document.referrer ? new URL(document.referrer).origin : '');
+        if (from && ALLOWED.test(from)) {
+            host = from;
+            window.parent.postMessage({ ns: NS, type: 'ready', v: 1, path: location.pathname }, host);
+        }
+    } catch (e) { /* no parent origin to tell */ }
 })();
